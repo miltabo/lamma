@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https: wss: ws:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<meta name="theme-color" content="#0d2220">
+<meta name="theme-color" content="#0f2321">
 <meta name="color-scheme" content="dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,196 +19,223 @@
 <title>لَمّة | لعبة كروت مصرية</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
-:root{--bg:#0d2220;--surf:#183f3a;--gold:#f5c96a;--cream:#ffefd4;--ink:#153631;--muted:#a9bfb4;--red:#f07869;--teal:#78c7c0;--green:#7fd18b;--hwb:clamp(58px,min(19vw,12.5vh),98px)}
+:root{
+ --bg:#0f2321;--s1:#152f2c;--s2:#1b3935;--line:#ffffff17;--line2:#ffffff2e;
+ --text:#f2eadb;--muted:#9db2a9;--gold:#e8bd5c;--gold-d:#a9832c;--teal:#6dbdb3;--red:#dc7b6b;--green:#7fc48b;
+ --paper:#f4ecda;--ink:#1f2b28;
+ --hwb:clamp(58px,min(19vw,12.5vh),98px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
-body{background:radial-gradient(ellipse at 50% -10%,#2b5d54 0,#0d2220 62%) fixed;color:var(--cream);font-family:Cairo,Tahoma,sans-serif;overscroll-behavior:none;touch-action:manipulation;-webkit-user-select:none;user-select:none;overflow:hidden}
+body{background:linear-gradient(180deg,#14302c 0,#0f2321 50%) fixed;color:var(--text);font-family:Cairo,Tahoma,sans-serif;overscroll-behavior:none;touch-action:manipulation;-webkit-user-select:none;user-select:none;overflow:hidden;font-variant-numeric:tabular-nums}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation;padding:0}
 button:disabled{cursor:not-allowed}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-input{font:inherit;color:var(--cream);-webkit-user-select:text;user-select:text}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+input{font:inherit;color:var(--text);-webkit-user-select:text;user-select:text}
 .hidden{display:none!important}
+svg{display:block}
+
 /* ===== اللعبة ===== */
 #game{position:fixed;inset:0;display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto auto auto;max-width:1000px;margin:0 auto;padding-top:env(safe-area-inset-top)}
 .hdr{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px 2px}
-.ib{width:42px;height:42px;border-radius:13px;background:#ffffff12;border:1px solid #ffffff22;font-size:19px;display:grid;place-items:center;flex:none}
-.ib.on{background:#f5c96a2e;border-color:var(--gold)}
+.ib{height:38px;min-width:40px;padding:0 10px;border-radius:11px;background:var(--s1);border:1px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--muted);flex:none}
+.ib svg{width:20px;height:20px;color:var(--text)}
+.ib.on{color:var(--gold);border-color:#e8bd5c66}
 .rounds{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.pips{display:flex;gap:5px}
-.pip{width:20px;height:6px;border-radius:3px;background:#ffffff26;transition:background .3s}
+.pips{display:flex;gap:4px}
+.pip{width:18px;height:4px;border-radius:2px;background:#ffffff1f;transition:background .3s}
 .pip.done{background:var(--gold)}
-.pip.now{background:var(--teal);animation:pulse 1.2s infinite alternate}
-.rtxt{font-size:12px;font-weight:800;color:var(--gold)}
-.pbar{position:relative;display:flex;align-items:center;gap:10px;margin:3px 10px;padding:5px 10px;border-radius:15px;background:#ffffff0d;border:1px solid #ffffff1c}
-.pbar.opp{border-color:#f0786955}.pbar.me{border-color:#78c7c055}
-.pbar .av{width:38px;height:38px;border-radius:50%;background:#ffffff1c;display:grid;place-items:center;font-size:22px;flex:none}
+.pip.now{background:var(--teal)}
+.rtxt{font-size:12px;font-weight:700;color:var(--muted)}
+.pbar{position:relative;display:flex;align-items:center;gap:10px;margin:3px 10px;padding:6px 12px;border-radius:14px;background:var(--s1);border:1px solid var(--line)}
+.pbar .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:900;flex:none;color:#fff}
 .pbar .pi{min-width:0;display:flex;flex-direction:column;line-height:1.25}
 .pbar .nm{font-weight:800;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pbar .st{font-size:11px;color:var(--muted)}
-.pbar .st.ready{color:var(--green);font-weight:800}
-.pbar .sc{margin-inline-start:auto;font-weight:900;font-size:26px;color:var(--gold);min-width:2ch;text-align:center;font-variant-numeric:tabular-nums}
-.bubble{position:absolute;top:-4px;inset-inline-end:60px;font-size:34px;animation:floatup 1.7s ease-out forwards;pointer-events:none;z-index:3}
-.events{display:flex;gap:6px;overflow-x:auto;padding:3px 10px;scrollbar-width:none;min-height:26px}
+.pbar .st.ready{color:var(--green);font-weight:700}
+.pbar .sc{margin-inline-start:auto;font-weight:900;font-size:24px;color:var(--text);min-width:2ch;text-align:center}
+.pbar.me .sc{color:var(--gold)}
+.bubble{position:absolute;top:-14px;inset-inline-start:52px;background:var(--paper);color:var(--ink);font-size:13px;font-weight:800;padding:4px 12px;border-radius:12px 12px 12px 3px;animation:floatup 2s ease-out forwards;pointer-events:none;z-index:3;white-space:nowrap}
+.events{display:flex;gap:6px;overflow-x:auto;padding:3px 10px;scrollbar-width:none;min-height:24px}
 .events::-webkit-scrollbar{display:none}
-.evc{flex:none;font-size:11px;font-weight:700;background:#f5c96a1c;border:1px solid #f5c96a55;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.evc{flex:none;font-size:11px;font-weight:700;color:var(--muted);border:1px solid var(--line2);border-radius:999px;padding:1px 10px;white-space:nowrap}
+.evc b{color:var(--gold);font-weight:800}
 .lanewrap{position:relative;min-height:0;display:flex}
 .lanes{flex:1;min-width:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:minmax(214px,1fr);gap:6px;padding:12px 8px 6px;overflow-y:auto}
-.lane{position:relative;display:grid;grid-template-rows:auto 1fr auto 1fr;grid-auto-rows:auto;gap:4px;max-height:440px;align-self:center;height:100%;padding:7px 5px;border-radius:16px;background:linear-gradient(180deg,#ffffff16,#ffffff06);border:1px solid #ffffff28;cursor:pointer;transition:outline-color .2s,background .2s}
-.lane.elig{outline:2.5px solid var(--gold);background:linear-gradient(180deg,#f5c96a2b,#f5c96a0e)}
-.lane.staged{outline:3px solid var(--teal);background:linear-gradient(180deg,#78c7c030,#78c7c010)}
-.lane.full{opacity:.7}
-.lh{display:flex;align-items:center;justify-content:space-between;gap:2px;line-height:1.1}
-.ln{font-size:13px;font-weight:900;color:var(--gold);white-space:nowrap}
-.lp{font-size:11px;font-weight:900;background:#f5c96a24;border-radius:8px;padding:1px 6px;color:var(--gold)}
-.evb{position:absolute;top:-9px;inset-inline-start:6px;font-size:10px;font-weight:800;background:#2b1f09;border:1px solid var(--gold);border-radius:999px;padding:0 7px;white-space:nowrap;z-index:1}
+.lane{position:relative;display:grid;grid-template-rows:auto 1fr auto 1fr;grid-auto-rows:auto;gap:4px;max-height:440px;align-self:center;height:100%;padding:8px 5px 6px;border-radius:14px;background:var(--s1);border:1px solid var(--line);cursor:pointer;transition:box-shadow .2s,background .2s}
+.lane.elig{box-shadow:inset 0 0 0 1.5px var(--gold);background:#1c3833}
+.lane.staged{box-shadow:inset 0 0 0 2px var(--teal);background:#183a37}
+.lane.full{opacity:.75}
+.lh{display:flex;align-items:baseline;justify-content:space-between;gap:2px;line-height:1.1;padding:0 3px}
+.ln{font-size:14px;font-weight:800;white-space:nowrap}
+.lp{font-size:11px;font-weight:700;color:var(--gold)}
+.evb{position:absolute;top:-8px;inset-inline-start:8px;font-size:10px;font-weight:700;color:var(--gold);background:var(--bg);border:1px solid #e8bd5c55;border-radius:999px;padding:0 8px;white-space:nowrap;z-index:1}
 .stack{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:3px;min-height:0}
-.tile{position:relative;display:flex;align-items:center;gap:4px;padding:0 4px;width:100%;height:100%;max-height:44px;min-height:24px;align-self:center;border-radius:9px;background:linear-gradient(155deg,#fff0cd,#e6cda0);color:var(--ink);box-shadow:0 2px 0 #967a4c;font-weight:800;border-inline-start:4px solid var(--teal);cursor:pointer}
+.tile{position:relative;display:flex;align-items:center;gap:4px;padding:0 6px;width:100%;height:100%;max-height:42px;min-height:24px;align-self:center;border-radius:8px;background:var(--paper);color:var(--ink);font-weight:800;border-inline-start:3px solid var(--teal);cursor:pointer}
 .stack.o .tile{border-inline-start-color:var(--red)}
-.te{font-size:clamp(15px,4.4vw,24px);line-height:1;flex:none}
-.tn{flex:1;min-width:0;font-size:10.5px;line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tp{flex:none;min-width:22px;height:22px;padding:0 3px;border-radius:7px;background:#173b37;color:var(--gold);display:grid;place-items:center;font-size:13px;font-weight:900}
-.tp.up{background:#1d6b3a;color:#d4ffd9}.tp.down{background:#7a2b22;color:#ffd9d2}
-.slot{width:100%;height:100%;max-height:44px;min-height:24px;align-self:center;border:1.5px dashed #ffffff30;border-radius:9px;display:grid;place-items:center;color:#ffffff30;font-size:11px}
-.tile.fresh{animation:pop .5s ease-out}
-.tile.ghost{opacity:.7;outline:2px dashed var(--gold);outline-offset:-2px}
+.tn{flex:1;min-width:0;font-size:11.5px;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tp{flex:none;min-width:22px;height:22px;padding:0 4px;border-radius:6px;background:#e3d6b9;color:var(--ink);display:grid;place-items:center;font-size:13px;font-weight:900}
+.tp.up{background:#cfe7d2;color:#1d5a2c}.tp.down{background:#f1d2cb;color:#7a2b22}
+.slot{width:100%;height:100%;max-height:42px;min-height:24px;align-self:center;border:1px dashed #ffffff26;border-radius:8px}
+.tile.fresh{animation:pop .45s ease-out}
+.tile.ghost{opacity:.75;outline:1.5px dashed var(--teal);outline-offset:-1.5px}
 .vs{display:flex;align-items:center;justify-content:center;gap:5px;min-height:30px}
-.pw{min-width:30px;text-align:center;white-space:nowrap;font-weight:900;font-size:16px;padding:1px 6px;border-radius:14px;background:#00000050;color:var(--cream);transition:background .25s,color .25s;font-variant-numeric:tabular-nums;line-height:1.35}
-.pw small{display:block;font-size:9px;font-weight:700;line-height:1.1;margin-top:-2px}
-.pw.o.lead{background:var(--red);color:#2b0f0b}.pw.m.lead{background:var(--gold);color:#13332e}
-.vs i{font-style:normal;font-size:11px;color:var(--muted);flex:none}
+.pw{min-width:30px;text-align:center;white-space:nowrap;font-weight:900;font-size:16px;padding:1px 6px;border-radius:9px;background:#00000030;color:var(--text);transition:background .25s,color .25s;line-height:1.35}
+.pw small{display:block;font-size:9px;font-weight:700;line-height:1.1;margin-top:-2px;opacity:.85}
+.pw.o.lead{background:var(--red);color:#2a100c}.pw.m.lead{background:var(--gold);color:#2a1d05}
+.vs i{font-style:normal;font-size:10px;color:var(--muted);flex:none}
 @media(max-width:430px){.vs i{display:none}.vs{gap:8px}}
-.gain{font-size:11px;font-weight:900;color:#0e2d17;background:var(--green);border-radius:8px;padding:0 6px;animation:pop .3s}
-.gain.neg{background:var(--red);color:#2b0f0b}
+.gain{font-size:11px;font-weight:800;color:var(--green);padding:0 2px}
+.gain.neg{color:var(--red)}
 .calc{font-size:10px;line-height:1.6;color:var(--muted);text-align:center}
 /* العدّاد */
 .cd{position:absolute;z-index:4;pointer-events:none;display:grid;place-items:center}
-.cd.me{left:50%;top:50%;margin:-62px 0 0 -62px;width:124px;height:124px}
-.cd.opp{top:50%;margin-top:-27px;inset-inline-end:76px;width:54px;height:54px}
+.cd.me{left:50%;top:50%;margin:-60px 0 0 -60px;width:120px;height:120px}
+.cd.opp{top:50%;margin-top:-23px;inset-inline-end:70px;width:46px;height:46px}
 .cd svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
-.cd .bgc{fill:#071a18e6;stroke:#ffffff26;stroke-width:6}
-.cd .fg{fill:none;stroke:var(--teal);stroke-width:6;stroke-linecap:round;stroke-dasharray:213.63;stroke-dashoffset:0;transition:stroke-dashoffset .25s linear,stroke .3s}
+.cd .bgc{fill:#0b1c1ae8;stroke:#ffffff1f;stroke-width:5}
+.cd .fg{fill:none;stroke:var(--teal);stroke-width:5;stroke-linecap:round;stroke-dasharray:213.63;stroke-dashoffset:0;transition:stroke-dashoffset .25s linear,stroke .3s}
 .cd.me .fg{stroke:var(--gold)}
-.cd b{position:relative;font-size:46px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
-.cd.opp b{font-size:22px}
+.cd b{position:relative;font-size:44px;font-weight:900;line-height:1}
+.cd.opp b{font-size:18px}
+.cd .lbl{position:absolute;top:100%;margin-top:6px;font-size:12px;font-weight:700;white-space:nowrap;text-shadow:0 1px 6px #000}
 .cd.opp .lbl{display:none}
-.cd .lbl{position:absolute;top:100%;margin-top:5px;font-size:12px;font-weight:800;white-space:nowrap;text-shadow:0 1px 5px #000}
 .cd.urgent .fg{stroke:var(--red)}
-.cd.urgent{animation:throb .45s infinite alternate}
+.cd.urgent{animation:throb .5s infinite alternate}
 .vig{position:fixed;inset:0;pointer-events:none;z-index:6}
 .vig.on{animation:vig .9s infinite alternate}
 .logln{min-height:20px;padding:0 12px;font-size:11.5px;color:var(--muted);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* الكروت */
-.card{position:relative;--cw:var(--hw);width:var(--cw);height:calc(var(--cw)*1.38);flex:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(var(--cw)*.06) 3px 4px;border-radius:calc(var(--cw)*.14);border:2px solid #fff6d0;background:linear-gradient(155deg,#fff0cd,#e6cda0);color:var(--ink);box-shadow:0 3px 0 #967a4c,0 6px 12px #0006;overflow:hidden;transition:transform .15s}
-.card .bp{position:absolute;top:3px;right:3px;min-width:22px;height:22px;padding:0 4px;border-radius:8px;background:#173b37;color:var(--gold);display:grid;place-items:center;font-weight:900;font-size:13px}
-.card .bk{position:absolute;top:4px;left:4px;font-size:8px;border-radius:5px;padding:1px 4px;background:#e0b86a;font-weight:800}
-.card .be{font-size:calc(var(--cw)*.42);line-height:1.15;margin-top:calc(var(--cw)*.2)}
-.card .bn{font-size:max(10px,calc(var(--cw)*.14));font-weight:900;line-height:1.15;margin-top:2px}
-.card .ba{display:none;font-size:9.5px;line-height:1.3;margin-top:auto;padding:0 2px}
+/* الكروت: الرقم في النص ولون العيلة */
+.card{position:relative;--cw:var(--hw);--fam:#8a6420;width:var(--cw);height:calc(var(--cw)*1.38);flex:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(var(--cw)*.1) 4px 6px;border-radius:12px;background:var(--paper);color:var(--ink);box-shadow:0 2px 8px #0006;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--fam)}
+.card .fl{display:none;font-size:10px;font-weight:800;color:var(--fam);letter-spacing:0}
+.card .num{font-size:calc(var(--cw)*.46);font-weight:900;line-height:1;color:var(--fam);margin-top:calc(var(--cw)*.06)}
+.card .nm{width:100%;font-size:max(10.5px,calc(var(--cw)*.145));font-weight:800;line-height:1.2;margin-top:auto;overflow-wrap:anywhere}
+.card .ab{display:none;width:100%;font-size:9.5px;line-height:1.35;color:#5d5546;margin-top:4px}
 .card.hand{cursor:pointer}
-.card.hand.sel{transform:translateY(-14px);outline:3px solid var(--gold)}
-.card.hand.sent{opacity:.45}
-.card.hand.sent::after{content:'✔';position:absolute;inset:0;display:grid;place-items:center;font-size:30px;color:var(--ink)}
+.card.hand .nm{margin-bottom:2px}
+.card.hand.sel{transform:translateY(-12px);box-shadow:0 0 0 2px var(--gold),0 8px 16px #0007}
+.card.hand.sent{opacity:.5}
+.card .tag{position:absolute;left:0;right:0;bottom:0;padding:3px 2px;font-size:max(9.5px,calc(var(--cw)*.12));font-weight:900;line-height:1.2;background:var(--gold);color:#2a1d05}
+.card.hand.sent .tag{background:#cfc4ab;color:var(--ink)}
 .card.big{--cw:150px}
-.card.big .ba{display:block;font-size:11.5px}
-.card.big .bk{font-size:10px}
 .card.mid{--cw:104px}
-.card.mid .ba{display:block;font-size:9px}
+.card.big .fl,.card.mid .fl{display:block}
+.card.big .ab,.card.mid .ab{display:block}
+.card.big .ab{font-size:12px}
+.card.big .num{margin-top:6px}.card.mid .num{margin-top:4px}
+.card.big .nm,.card.mid .nm{margin-top:6px}
 /* الدوك */
-.dock{position:relative;background:linear-gradient(#0b2523f0,#081b19);border-top:1px solid #ffffff22;padding:6px 10px calc(8px + env(safe-area-inset-bottom))}
-.infoln{min-height:34px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;gap:6px;line-height:1.35}
-.infoln b{color:var(--gold)}
-.hand{--hw:min(var(--hwb),calc((100vw - 28px - (var(--n,4) - 1)*6px)/var(--n,4)));display:flex;justify-content:center;gap:6px;padding:15px 0 6px;min-height:calc(var(--hw)*1.38 + 22px)}
-.acts{display:flex;gap:8px}
-.prim{flex:1;height:52px;border-radius:16px;background:linear-gradient(#ffd97f,#f1b94a);color:#2a1d05;font-weight:900;font-size:16px;box-shadow:0 4px 0 #a8802a;transition:transform .1s}
-.prim:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #a8802a}
-.prim:disabled{background:#ffffff1a;color:var(--muted);box-shadow:none}
-.prim.nudge{animation:nudge .6s infinite alternate}
-.sbtn{height:52px;min-width:56px;padding:0 10px;border-radius:16px;background:#ffffff14;border:1px solid #ffffff30;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;font-weight:800}
-.sbtn span{font-size:19px}.sbtn small{font-size:10px}
-.sbtn.on{background:#78c7c033;border-color:var(--teal)}
-.sbtn:disabled{opacity:.4}
-.tray{position:absolute;bottom:calc(100% + 6px);inset-inline-end:10px;display:flex;gap:4px;padding:6px;background:#0b2523f5;border:1px solid #ffffff33;border-radius:18px;z-index:5}
-.tray button{font-size:26px;width:46px;height:46px;border-radius:12px}
-.tray button:active{background:#ffffff20}
+.dock{position:relative;background:#0c1d1b;border-top:1px solid var(--line);padding:6px 10px calc(10px + env(safe-area-inset-bottom))}
+.dockrow{display:flex;align-items:center;gap:8px;min-height:40px}
+.infoln{flex:1;min-width:0;text-align:center;font-size:12.5px;line-height:1.4;color:var(--muted)}
+.infoln b{color:var(--text)}
+.infoln .cta{color:var(--gold);font-weight:800}
+.pill{height:34px;padding:0 12px;border-radius:10px;background:var(--s1);border:1px solid var(--line2);font-size:12px;font-weight:800;white-space:nowrap;flex:none}
+.pill b{color:var(--gold)}
+.pill.on{border-color:var(--teal);color:var(--teal)}
+.pill:disabled{opacity:.4}
+.hand{--hw:min(var(--hwb),calc((100vw - 28px - (var(--n,4) - 1)*6px)/var(--n,4)));display:flex;justify-content:center;gap:6px;padding:14px 0 2px;min-height:calc(var(--hw)*1.38 + 16px)}
+.tray{position:absolute;bottom:calc(100% + 6px);inset-inline-end:10px;display:flex;flex-wrap:wrap;gap:6px;max-width:300px;padding:8px;background:var(--s2);border:1px solid var(--line2);border-radius:14px;z-index:5}
+.tray button{padding:7px 12px;border-radius:10px;background:var(--s1);border:1px solid var(--line);font-size:13px;font-weight:700}
+.tray button:active{background:#ffffff1a}
 /* الشاشات والنوافذ */
-.screen{position:fixed;inset:0;z-index:10;overflow:auto;background:radial-gradient(ellipse at 50% -10%,#2b5d54 0,#0d2220 62%);padding:max(16px,env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}
-.wrap{max-width:460px;margin:0 auto}
-.hero{text-align:center;padding-top:6px}
-.hero .eye{font-size:44px;line-height:1}
-.hero h1{margin:2px 0;font-size:clamp(54px,16vw,78px);line-height:1.15;color:var(--gold);font-weight:900;text-shadow:0 4px 0 #8a6a22,0 10px 30px #0008}
+.screen{position:fixed;inset:0;z-index:10;overflow:auto;background:linear-gradient(180deg,#14302c 0,#0f2321 50%);padding:max(20px,env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom))}
+.wrap{max-width:440px;margin:0 auto}
+.hero{text-align:center;padding:14px 0 4px}
+.wordmark{margin:0;font-size:clamp(68px,20vw,96px);line-height:1.2;color:var(--gold);font-weight:900;text-shadow:0 4px 0 #7a5d1e,0 12px 28px #0007}
 .hero p{margin:0;color:var(--muted);font-size:13px}
-.pcard{display:flex;align-items:center;gap:12px;padding:12px;margin-top:16px;border-radius:20px;background:#ffffff10;border:1px solid #ffffff28}
-.avb{position:relative;flex:none;width:60px;height:60px;border-radius:50%;background:#ffffff1c;border:2px solid var(--gold);font-size:32px;display:grid;place-items:center}
-.avb::after{content:'✎';position:absolute;bottom:-3px;inset-inline-start:-3px;font-size:11px;background:var(--gold);color:#13332e;border-radius:50%;width:19px;height:19px;display:grid;place-items:center}
+.pcard{display:flex;align-items:center;gap:14px;padding:14px;margin-top:18px;border-radius:16px;background:var(--s1);border:1px solid var(--line)}
+.avb{flex:none;width:56px;height:56px;border-radius:50%;font-size:24px;font-weight:900;color:#fff;display:grid;place-items:center;box-shadow:0 0 0 2px var(--bg),0 0 0 3px var(--line2)}
 .pinfo{flex:1;min-width:0}
-#nameIn{width:100%;background:transparent;border:0;border-bottom:1px dashed #ffffff55;padding:2px 0;font-weight:800;font-size:16px}
-#nameIn::placeholder{color:#a9bfb4aa}
-.lvline{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:5px}
-.xpbar{height:9px;border-radius:5px;background:#00000050;overflow:hidden;margin-top:4px}
-.xpbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .8s}
-.chips{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.chip{font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;background:#ffffff14;border:1px solid #ffffff2a}
-.chip.fire{background:#f0786926;border-color:#f0786988}
-.big{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;padding:8px 14px;margin-top:10px;border-radius:18px;font-weight:900;font-size:17px;background:linear-gradient(#ffd97f,#f1b94a);color:#2a1d05;box-shadow:0 4px 0 #a8802a;transition:transform .1s}
-.big:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #a8802a}
-.big.teal{background:linear-gradient(#8fd8d1,#5fb3ab);color:#06302d;box-shadow:0 4px 0 #3c8179}
-.big.sec{background:#ffffff14;color:var(--cream);border:1px solid #ffffff33;box-shadow:none}
-.big:disabled{opacity:.5}
-.badge{font-size:11px;background:var(--red);color:#2b0f0b;border-radius:999px;padding:1px 9px;font-weight:900}
+#nameIn{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line2);padding:2px 0 3px;font-weight:800;font-size:16px}
+#nameIn::placeholder{color:#9db2a9aa}
+.lvline{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+.lvline b{color:var(--text)}
+.xpbar{height:6px;border-radius:3px;background:#00000040;overflow:hidden;margin-top:5px}
+.xpbar i{display:block;height:100%;width:0;background:var(--gold);transition:width .8s}
+.chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.chip{font-size:11.5px;font-weight:700;color:var(--muted);padding:1px 9px;border-radius:999px;border:1px solid var(--line2)}
+.chip.hot{color:var(--gold);border-color:#e8bd5c66}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;padding:8px 14px;margin-top:10px;border-radius:14px;font-weight:800;font-size:16px;transition:transform .1s,background .15s}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn.p{background:var(--gold);color:#2a1d05;box-shadow:0 2px 0 var(--gold-d)}
+.btn.t{background:var(--teal);color:#0b2b27;box-shadow:0 2px 0 #3f8a81}
+.btn.o{background:transparent;color:var(--text);border:1px solid var(--line2)}
+.btn.sm{min-height:46px;font-size:15px}
+.btn:disabled{opacity:.5}
+.badge{font-size:10.5px;background:var(--red);color:#2a100c;border-radius:999px;padding:0 8px;font-weight:800}
 .seg{display:flex;gap:6px;margin-top:8px}
-.seg button{flex:1;min-height:44px;background:#ffffff12;border:1px solid #ffffff3a;border-radius:12px;font-weight:800;font-size:13px}
-.seg button.on{background:var(--gold);color:#13332e;border-color:var(--gold)}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
-.gb{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:64px;justify-content:center;border-radius:14px;background:#ffffff10;border:1px solid #ffffff22;font-size:12px;font-weight:800}
-.gb span{font-size:22px}
-.stats{font-size:12px;color:var(--muted);background:#00000030;border-radius:12px;padding:9px;margin-top:12px;line-height:1.9;text-align:center}
-.overlay{position:fixed;inset:0;z-index:20;background:#041a18e8;display:grid;place-items:center;padding:14px;overflow:auto}
+.seg button{flex:1;min-height:42px;background:var(--s1);border:1px solid var(--line);border-radius:11px;font-weight:700;font-size:13px;color:var(--muted)}
+.seg button.on{background:#e8bd5c1f;border-color:#e8bd5c88;color:var(--gold)}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.links button{min-height:46px;border-radius:12px;background:var(--s1);border:1px solid var(--line);font-size:14px;font-weight:700}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.statgrid div{background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center}
+.statgrid b{display:block;font-size:19px;font-weight:900}
+.statgrid span{font-size:10.5px;color:var(--muted)}
+.statnote{font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px}
+.overlay{position:fixed;inset:0;z-index:20;background:#06100fe0;display:grid;place-items:center;padding:14px;overflow:auto}
 .overlay.sheetpos{place-items:end center;padding:0}
 .overlay.z2{z-index:30}.overlay.z3{z-index:40}
-.modal{width:min(520px,100%);max-height:92vh;overflow:auto;border:2px solid #f5c96a77;background:linear-gradient(160deg,#27564d,#10302c);border-radius:24px;padding:20px 18px;text-align:center;box-shadow:0 20px 80px #000a;margin:auto}
-.sheetpos .modal{border-radius:24px 24px 0 0;border-bottom:0;padding-bottom:calc(20px + env(safe-area-inset-bottom));animation:slideup .25s ease-out}
-.modal h2{color:var(--gold);font-size:26px;margin:4px 0 8px}
+.modal{width:min(480px,100%);max-height:92vh;overflow:auto;border:1px solid var(--line2);background:var(--s2);border-radius:20px;padding:22px 18px;text-align:center;box-shadow:0 20px 60px #000a;margin:auto}
+.sheetpos .modal{border-radius:20px 20px 0 0;border-bottom:0;padding-bottom:calc(20px + env(safe-area-inset-bottom));animation:slideup .22s ease-out}
+.modal h2{font-size:22px;margin:2px 0 10px;font-weight:900}
 .modal p{line-height:1.8;margin:6px 0}
-.rule{background:#ffffff14;padding:8px 12px;margin:7px 0;border-radius:11px;text-align:right;font-size:14px;line-height:1.7}
+.rule{background:var(--s1);border:1px solid var(--line);padding:9px 12px;margin:7px 0;border-radius:11px;text-align:right;font-size:14px;line-height:1.75}
+.rule b{color:var(--gold)}
 .mini{font-size:12px;color:var(--muted)}
-.emoji-big{font-size:52px;line-height:1.2}
 .startrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.roomcode{font-size:46px;letter-spacing:.25em;font-weight:900;color:var(--gold);direction:ltr;margin:6px 0}
-.code-in{width:100%;background:#ffffff14;border:1px solid #ffffff55;border-radius:12px;padding:11px;text-align:center;direction:ltr;text-transform:uppercase;letter-spacing:.25em;font-size:18px;font-weight:800}
-.catgrid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:12px 0}
-.avgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
-.avgrid button{position:relative;aspect-ratio:1;border-radius:16px;background:#ffffff12;border:2px solid #ffffff2a;font-size:34px}
-.avgrid button.cur{border-color:var(--gold);background:#f5c96a26}
-.avgrid button.lock{opacity:.45}
-.avgrid small{position:absolute;bottom:2px;left:0;right:0;font-size:10px;font-weight:800}
-.achl{display:flex;align-items:center;gap:10px;text-align:right;padding:9px 12px;margin:7px 0;border-radius:12px;background:#ffffff12}
+.roomcode{font-size:44px;letter-spacing:.25em;font-weight:900;color:var(--gold);direction:ltr;margin:6px 0}
+.code-in{width:100%;background:var(--s1);border:1px solid var(--line2);border-radius:12px;padding:11px;text-align:center;direction:ltr;text-transform:uppercase;letter-spacing:.25em;font-size:18px;font-weight:800}
+.catgrid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0}
+.famkey{display:flex;flex-wrap:wrap;gap:6px 12px;justify-content:center;font-size:12px;color:var(--muted)}
+.famkey span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-inline-end:5px;vertical-align:-1px}
+.avgrid{display:grid;grid-template-columns:repeat(4,minmax(0,64px));justify-content:center;gap:14px;margin:16px 0 34px}
+.avgrid button{position:relative;aspect-ratio:1;border-radius:50%;font-size:22px;font-weight:900;color:#fff;box-shadow:0 0 0 2px var(--s2)}
+.avgrid button.cur{box-shadow:0 0 0 2px var(--s2),0 0 0 4px var(--gold)}
+.avgrid button.lock{opacity:.35}
+.avgrid small{position:absolute;bottom:-18px;left:-6px;right:-6px;font-size:10px;font-weight:700;color:var(--muted)}
+.avgrid.pad{row-gap:30px}
+.achl{display:flex;align-items:center;gap:12px;text-align:right;padding:10px 12px;margin:7px 0;border-radius:12px;background:var(--s1);border:1px solid var(--line)}
 .achl.off{opacity:.5}
-.achl .ai{font-size:28px;flex:none}
+.medal{flex:none;width:30px;height:30px;border-radius:50%;background:#ffffff14;border:2px solid #ffffff2a}
+.achl:not(.off) .medal{background:var(--gold);border-color:#f6dc9a}
 .achl b{display:block;font-size:14px}.achl span{font-size:12px;color:var(--muted)}
+.result{font-size:46px;font-weight:900;line-height:1.1}
+.result.w{color:var(--gold)}.result.l{color:var(--red)}.result.d{color:var(--text)}
+.endsub{color:var(--muted);font-size:14px;margin-top:2px}
+.score{display:flex;align-items:center;justify-content:center;gap:16px;margin:14px 0 6px}
+.score div{display:flex;flex-direction:column;align-items:center;min-width:90px}
+.score b{font-size:34px;font-weight:900;line-height:1.1}
+.score span{font-size:12px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.score i{font-style:normal;color:var(--muted);font-size:22px}
 .lres{display:flex;gap:8px;justify-content:center;margin:10px 0}
-.lres div{flex:1;border-radius:12px;padding:6px 2px;font-size:12px;font-weight:800;background:#ffffff14;line-height:1.5}
-.lres .w{background:#f5c96a30;border:1px solid var(--gold)}.lres .l{background:#f0786926;border:1px solid #f0786988}
-.xpbox{background:#00000030;border-radius:14px;padding:10px;margin-top:8px}
-.xpt{display:flex;justify-content:space-between;font-size:13px;font-weight:800}
-.newach{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:8px;padding:8px;border-radius:12px;background:#f5c96a26;border:1px dashed var(--gold);font-size:13px;font-weight:800}
+.lres div{flex:1;border-radius:12px;padding:7px 2px;font-size:12px;font-weight:700;background:var(--s1);border:1px solid var(--line);line-height:1.6;color:var(--muted)}
+.lres div b{display:block;color:var(--text);font-size:13px}
+.lres .w{border-color:#e8bd5c88;color:var(--gold)}.lres .l{border-color:#dc7b6b77;color:var(--red)}
+.xpbox{background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px}
+.xpt{display:flex;justify-content:space-between;font-size:13px;font-weight:700}
+.xpt span:first-child{color:var(--gold)}
+.newach{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:8px;padding:8px;border-radius:12px;border:1px dashed #e8bd5c77;font-size:13px;font-weight:700}
+.newach .medal{width:18px;height:18px;background:var(--gold);border-color:#f6dc9a}
+.newach .sw{width:18px;height:18px;border-radius:50%;flex:none}
+.stepnum{width:64px;height:64px;margin:4px auto 6px;border-radius:50%;border:2px solid var(--gold);color:var(--gold);display:grid;place-items:center;font-size:30px;font-weight:900}
 .tourdots{display:flex;gap:6px;justify-content:center;margin:12px 0}
-.tourdots i{width:8px;height:8px;border-radius:50%;background:#ffffff40}
-.tourdots i.on{background:var(--gold);width:22px;border-radius:5px}
-.toast{position:fixed;top:calc(12% + env(safe-area-inset-top));left:50%;transform:translateX(-50%);max-width:90vw;background:#000000d0;border:1px solid #f5c96a88;border-radius:16px;padding:10px 18px;font-size:16px;font-weight:900;z-index:60;text-align:center;pointer-events:none}
-.toast.show{animation:toastin .3s ease-out}
-.upd{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:10px;right:10px;z-index:70;display:flex;gap:10px;align-items:center;justify-content:space-between;background:#10302c;border:1px solid var(--gold);border-radius:14px;padding:10px 14px;font-weight:800;font-size:13px}
-.upd button{background:var(--gold);color:#13332e;border-radius:10px;padding:6px 14px;font-weight:900}
-@keyframes pop{0%{transform:scale(.4) translateY(-24px);opacity:0}70%{transform:scale(1.08)}100%{transform:none;opacity:1}}
-@keyframes pulse{to{opacity:.4}}
-@keyframes throb{to{scale:1.09}}
-@keyframes vig{from{box-shadow:inset 0 0 40px 6px #f0786955}to{box-shadow:inset 0 0 90px 22px #f07869aa}}
-@keyframes floatup{0%{transform:translateY(10px) scale(.6);opacity:0}15%{opacity:1;transform:translateY(0) scale(1.1)}100%{transform:translateY(-46px) scale(1);opacity:0}}
-@keyframes slideup{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
-@keyframes toastin{from{transform:translateX(-50%) scale(.7);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
-@keyframes nudge{to{transform:scale(1.03)}}
-@media(max-width:430px){.card.hand .bk{display:none}}
-@media(max-height:680px){.infoln{min-height:26px;font-size:12px}.hand{padding-top:12px}.acts .prim,.acts .sbtn{height:46px}.pbar{padding:3px 10px}.pbar .av{width:32px;height:32px;font-size:18px}.pbar .sc{font-size:22px}}
-@media(min-width:820px){:root{--hwb:96px}.card .ba{display:block;font-size:9.5px}.tile{max-height:54px}.tn{font-size:12.5px}.te{font-size:24px}.slot{max-height:54px}.lane{max-height:520px}.ln{font-size:15px}.pw{font-size:18px}.infoln{font-size:14px}}
+.tourdots i{width:7px;height:7px;border-radius:4px;background:#ffffff33}
+.tourdots i.on{background:var(--gold);width:20px}
+.toast{position:fixed;top:calc(13% + env(safe-area-inset-top));left:50%;transform:translateX(-50%);max-width:88vw;background:#0b1c1af2;border:1px solid var(--line2);border-radius:14px;padding:10px 18px;font-size:14.5px;font-weight:800;z-index:60;text-align:center;pointer-events:none;box-shadow:0 10px 30px #0008}
+.toast.show{animation:toastin .25s ease-out}
+.upd{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:10px;right:10px;z-index:70;display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--s2);border:1px solid var(--line2);border-radius:14px;padding:10px 14px;font-weight:700;font-size:13px}
+.upd button{background:var(--gold);color:#2a1d05;border-radius:10px;padding:6px 14px;font-weight:800}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
+@keyframes throb{to{scale:1.07}}
+@keyframes vig{from{box-shadow:inset 0 0 40px 4px #dc7b6b40}to{box-shadow:inset 0 0 80px 16px #dc7b6b88}}
+@keyframes floatup{0%{transform:translateY(8px);opacity:0}12%{opacity:1;transform:none}80%{opacity:1}100%{transform:translateY(-14px);opacity:0}}
+@keyframes slideup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes toastin{from{transform:translateX(-50%) translateY(-6px);opacity:0}to{transform:translateX(-50%);opacity:1}}
+@media(max-width:430px){.card.hand .nm{font-size:max(10px,calc(var(--cw)*.14))}}
+@media(max-height:680px){.dockrow{min-height:34px}.hand{padding-top:12px}.pbar{padding:4px 10px}.pbar .av{width:30px;height:30px;font-size:14px}.pbar .sc{font-size:21px}}
+@media(min-width:820px){:root{--hwb:100px}.card.hand .ab{display:block}.tile{max-height:52px}.tn{font-size:13px}.slot{max-height:52px}.lane{max-height:520px}.ln{font-size:16px}.pw{font-size:18px}.infoln{font-size:14px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head>
 <body>
@@ -216,12 +243,12 @@ input{font:inherit;color:var(--cream);-webkit-user-select:text;user-select:text}
 
 <div id="game">
  <header class="hdr">
-  <button class="ib" id="menuTop" aria-label="القايمة">☰</button>
+  <button class="ib" id="menuTop" aria-label="القايمة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <div class="rounds"><div class="pips" id="pips"></div><div class="rtxt" id="rtxt"></div></div>
-  <button class="ib" id="calcBtn" aria-label="تفاصيل الحساب" aria-pressed="false">🔍</button>
+  <button class="ib" id="calcBtn" aria-pressed="false">الحساب</button>
  </header>
  <section class="pbar opp" id="oppBar">
-  <div class="av" id="oppAv">🤖</div>
+  <div class="av" id="oppAv"></div>
   <div class="pi"><div class="nm" id="oppName"></div><div class="st" id="oppSt"></div></div>
   <div class="sc" id="oppScore" aria-label="نقط الخصم">0</div>
  </section>
@@ -232,19 +259,18 @@ input{font:inherit;color:var(--cream);-webkit-user-select:text;user-select:text}
  </div>
  <div class="logln" id="log" aria-live="polite"></div>
  <section class="pbar me" id="meBar">
-  <div class="av" id="meAv">😎</div>
+  <div class="av" id="meAv"></div>
   <div class="pi"><div class="nm" id="meName"></div><div class="st" id="meSt"></div></div>
   <div class="sc" id="meScore" aria-label="نقطك">0</div>
  </section>
  <footer class="dock">
-  <div class="tray hidden" id="tray"><button data-e="😂">😂</button><button data-e="🔥">🔥</button><button data-e="👏">👏</button><button data-e="😅">😅</button><button data-e="🤝">🤝</button><button data-e="🙏">🙏</button></div>
-  <div class="infoln" id="infoLn"></div>
-  <div class="hand" id="hand" role="group" aria-label="كروتك"></div>
-  <div class="acts">
-   <button class="sbtn" id="swapBtn" aria-label="تبديل الكارت"><span>🔄</span><small>تبديل ×<b id="swapLeft">2</b></small></button>
-   <button class="prim" id="confirmBtn" disabled>اختار كارت</button>
-   <button class="sbtn hidden" id="emoteBtn" aria-label="تفاعل"><span>💬</span><small>تفاعل</small></button>
+  <div class="tray hidden" id="tray"></div>
+  <div class="dockrow">
+   <button class="pill" id="swapBtn">تبديل <b id="swapLeft">2</b></button>
+   <div class="infoln" id="infoLn" aria-live="polite"></div>
+   <button class="pill hidden" id="emoteBtn">رسالة</button>
   </div>
+  <div class="hand" id="hand" role="group" aria-label="كروتك"></div>
  </footer>
 </div>
 <div class="vig" id="vig"></div>
@@ -252,125 +278,126 @@ input{font:inherit;color:var(--cream);-webkit-user-select:text;user-select:text}
 
 <!-- الشاشة الرئيسية -->
 <div class="screen" id="home"><div class="wrap">
- <div class="hero"><div class="eye">🪬</div><h1>لَمّة</h1><p>لعبة كروت مصرية • ٨ أدوار • ٣ أماكن</p></div>
+ <div class="hero"><h1 class="wordmark">لَمّة</h1><p>لعبة كروت مصرية · ٨ أدوار · ٣ أماكن</p></div>
  <div class="pcard">
-  <button class="avb" id="avBtn" aria-label="غيّر الصورة">😎</button>
+  <button class="avb" id="avBtn" aria-label="غيّر لونك"></button>
   <div class="pinfo">
    <input id="nameIn" maxlength="14" placeholder="اكتب اسمك" autocomplete="off" aria-label="اسمك">
-   <div class="lvline"><span id="lvTxt">مستوى 1</span><span id="xpTxt">0/60</span></div>
+   <div class="lvline"><b id="lvTxt">مستوى 1</b><span id="xpTxt">0/60</span></div>
    <div class="xpbar"><i id="xpFillHome"></i></div>
-   <div class="chips"><span class="chip fire hidden" id="streakChip"></span><span class="chip" id="winChip"></span></div>
+   <div class="chips"><span class="chip hot hidden" id="streakChip"></span><span class="chip" id="winChip"></span></div>
   </div>
  </div>
- <button class="big" id="startBtn">🤖 العب ضد الروبوت</button>
- <div class="seg" id="diffSeg" role="group" aria-label="مستوى الروبوت"><button data-d="easy">😴 هيّن</button><button data-d="normal">🙂 عادي</button><button data-d="hard">😈 شرس</button></div>
- <button class="big teal" id="friendsBtn">👥 العب مع صاحبك أونلاين</button>
- <button class="big sec" id="dailyBtn">📅 تحدي النهارده <span class="badge hidden" id="dailyBadge">جديد</span></button>
- <div class="grid4">
-  <button class="gb" id="catBtn"><span>📖</span>الكروت</button>
-  <button class="gb" id="achBtn"><span>🏅</span>إنجازاتي</button>
-  <button class="gb" id="rulesBtn"><span>📜</span>القواعد</button>
-  <button class="gb" id="soundBtn"><span id="soundIc">🔊</span>الصوت</button>
+ <button class="btn p" id="startBtn">العب ضد الروبوت</button>
+ <div class="seg" id="diffSeg" role="group" aria-label="مستوى الروبوت"><button data-d="easy">هيّن</button><button data-d="normal">عادي</button><button data-d="hard">شرس</button></div>
+ <button class="btn t" id="friendsBtn">العب مع صاحبك أونلاين</button>
+ <button class="btn o" id="dailyBtn">تحدي النهارده <span class="badge hidden" id="dailyBadge">جديد</span></button>
+ <div class="links">
+  <button id="catBtn">الكروت</button>
+  <button id="achBtn">إنجازاتي</button>
+  <button id="rulesBtn">القواعد</button>
+  <button id="soundBtn">الصوت: <span id="soundTxt">شغال</span></button>
  </div>
- <button class="big sec hidden" id="installBtn">📲 ثبّت اللعبة على جهازك</button>
+ <button class="btn o sm hidden" id="installBtn">ثبّت اللعبة على جهازك</button>
  <div class="mini hidden" id="iosHint" style="text-align:center;margin-top:8px">على الآيفون: زرار المشاركة في Safari ثم «إضافة إلى الشاشة الرئيسية».</div>
- <div class="mini" id="dailyNote" style="text-align:center;margin-top:8px"></div>
- <div class="stats" id="introStats"></div>
+ <div class="statgrid" id="statGrid"></div>
+ <div class="statnote" id="statNote"></div>
+ <div class="statnote" id="dailyNote"></div>
 </div></div>
 
 <!-- أوضة الأصحاب -->
 <div class="overlay hidden" id="lobby"><div class="modal">
- <h2>👥 العب مع صاحبك</h2>
+ <h2>العب مع صاحبك</h2>
  <div id="lobbyMain">
-  <button class="big" id="hostBtn">🏠 اعمل أوضة وابعت الكود</button>
+  <button class="btn p" id="hostBtn">اعمل أوضة وابعت الكود</button>
   <div class="mini" style="margin:16px 0 6px">أو ادخل أوضة صاحبك بالكود</div>
   <input id="codeIn" class="code-in" maxlength="5" placeholder="الكود" autocomplete="off" aria-label="كود الأوضة">
-  <button class="big teal" id="joinBtn">ادخل الأوضة</button>
+  <button class="btn t" id="joinBtn">ادخل الأوضة</button>
  </div>
  <div id="lobbyWait" class="hidden">
   <div class="mini">كود الأوضة</div>
   <div class="roomcode" id="roomCode">-----</div>
-  <div class="startrow"><button class="big" id="copyBtn" style="margin-top:0">📋 انسخ الرابط</button><button class="big teal" id="shareLinkBtn" style="margin-top:0">📤 شارك</button></div>
+  <div class="startrow"><button class="btn p sm" id="copyBtn" style="margin-top:0">انسخ الرابط</button><button class="btn t sm" id="shareLinkBtn" style="margin-top:0">شارك</button></div>
  </div>
  <p class="mini" id="lobbyStatus" style="min-height:22px"></p>
- <button class="big sec" id="lobbyBack" style="min-height:46px">رجوع</button>
+ <button class="btn o sm" id="lobbyBack">رجوع</button>
  <p class="mini">اللعب الأونلاين محتاج إنترنت للطرفين. الاتصال مباشر بين الجهازين.</p>
 </div></div>
 
 <!-- النهاية -->
 <div class="overlay hidden" id="end"><div class="modal">
- <div class="emoji-big" id="endEmoji">🎉</div><h2 id="endTitle">جدع!</h2><p id="endDesc"></p>
+ <div class="result" id="endWord">كسبت</div>
+ <div class="endsub" id="endSub"></div>
+ <div class="score"><div><b id="esMe">0</b><span id="esMeN"></span></div><i>–</i><div><b id="esOp">0</b><span id="esOpN"></span></div></div>
  <div class="lres" id="endLanes"></div>
  <div class="xpbox" id="xpBox"><div class="xpt"><span id="xpGain"></span><span id="xpLvl"></span></div><div class="xpbar"><i id="xpFill"></i></div></div>
  <div id="endAch"></div>
- <div class="stats" id="endStats"></div>
- <button class="big" id="againBtn">نلعب جولة كمان 🔁</button>
- <div class="startrow"><button class="big sec" id="shareBtn" style="min-height:48px">📋 انسخ النتيجة</button><button class="big sec" id="endMenu" style="min-height:48px">🏠 القايمة</button></div>
+ <button class="btn p" id="againBtn">نلعب جولة كمان</button>
+ <div class="startrow"><button class="btn o sm" id="shareBtn">انسخ النتيجة</button><button class="btn o sm" id="endMenu">القايمة</button></div>
  <p class="mini" id="endNote" style="min-height:18px"></p>
 </div></div>
 
 <!-- قايمة اللعبة -->
 <div class="overlay hidden z2" id="gmenu"><div class="modal">
- <h2>☰ القايمة</h2>
- <button class="big" id="gmResume">كمّل اللعب ▶</button>
- <button class="big sec" id="gmRules">📜 القواعد</button>
- <button class="big sec" id="gmCards">📖 الكروت</button>
- <button class="big sec" id="gmLeave">🏠 اطلع من اللعبة</button>
+ <h2>القايمة</h2>
+ <button class="btn p" id="gmResume">كمّل اللعب</button>
+ <button class="btn o sm" id="gmRules">القواعد</button>
+ <button class="btn o sm" id="gmCards">الكروت</button>
+ <button class="btn o sm" id="gmLeave">اطلع من اللعبة</button>
 </div></div>
 
 <div class="overlay hidden z3" id="confirm"><div class="modal">
- <div class="emoji-big">🤔</div><p id="confirmTxt"></p>
- <div class="startrow"><button class="big sec" id="confirmNo" style="min-height:48px">لأ، كمّل</button><button class="big" id="confirmYes" style="min-height:48px">أيوه</button></div>
+ <p id="confirmTxt" style="font-size:16px;font-weight:700"></p>
+ <div class="startrow" style="margin-top:12px"><button class="btn o sm" id="confirmNo" style="margin-top:0">لأ، كمّل</button><button class="btn p sm" id="confirmYes" style="margin-top:0">أيوه</button></div>
 </div></div>
 
 <div class="overlay hidden z3" id="msgBox"><div class="modal">
- <div class="emoji-big">🔌</div><p id="msgText"></p><button class="big" id="msgOk">تمام</button>
+ <p id="msgText" style="font-size:16px;font-weight:700"></p><button class="btn p" id="msgOk">تمام</button>
 </div></div>
 
 <!-- تفاصيل كارت -->
 <div class="overlay hidden sheetpos z2" id="sheet"><div class="modal">
  <div style="display:flex;justify-content:center" id="sheetCard"></div>
  <p id="sheetTxt"></p>
- <button class="big sec" id="sheetClose" style="min-height:48px">تمام</button>
+ <button class="btn o sm" id="sheetClose">تمام</button>
 </div></div>
 
 <div class="overlay hidden z2" id="cats"><div class="modal">
- <h2>📖 كروت اللعبة</h2>
- <div class="mini">الرقم فوق هو القوة الأساسية، والقدرة مكتوبة تحت.</div>
+ <h2>كروت اللعبة</h2>
+ <div class="famkey" id="famKey"></div>
  <div class="catgrid" id="catGrid"></div>
- <button class="big" id="closeCats">تمام</button>
+ <button class="btn p" id="closeCats">تمام</button>
 </div></div>
 
 <div class="overlay hidden z2" id="avpick"><div class="modal">
- <h2>اختار صورتك</h2><div class="mini">كل ما مستواك يعلى بتفتح صور جديدة</div>
- <div class="avgrid" id="avGrid"></div>
- <button class="big" id="closeAv">تمام</button>
+ <h2>اختار لونك</h2><div class="mini">كل ما مستواك يعلى بتفتح ألوان جديدة</div>
+ <div class="avgrid pad" id="avGrid"></div>
+ <button class="btn p" id="closeAv">تمام</button>
 </div></div>
 
 <div class="overlay hidden z2" id="achs"><div class="modal">
- <h2>🏅 إنجازاتي</h2><div id="achList"></div>
- <button class="big" id="closeAch">تمام</button>
+ <h2>إنجازاتي</h2><div id="achList"></div>
+ <button class="btn p" id="closeAch">تمام</button>
 </div></div>
 
 <div class="overlay hidden z2" id="rules"><div class="modal">
- <h2>📜 أصول اللعبة</h2>
+ <h2>أصول اللعبة</h2>
  <div class="rule">كل لاعب بيبدأ بـ 4 كروت وبياخد كارت جديد كل دور. اللعبة <b>8 أدوار</b>.</div>
- <div class="rule">اختار كارت، دوس على المكان، وبعدين <b>أكّد</b>. إنت وخصمك بتختاروا في السر والكروت <b>بتتكشف مع بعض</b>.</div>
- <div class="rule">كل مكان بياخد <b>3 كروت</b> من كل طرف. الأعلى قوة بياخد نقط المكان: القهوة (5)، السوق (4)، الموقف (3). التعادل = نص النقط.</div>
- <div class="rule">🔢 الرقم الملوّن على الكارت في اللوحة هو قوته الحالية بعد القدرات: أخضر = زادت، أحمر = قلّت. دوس على أي كارت (أو اضغط عليه ضغطة طويلة) تشوف تفاصيله.</div>
- <div class="rule">🔄 <b>تبديل:</b> ترمي الكارت المختار وتسحب غيره، وده بيحسب دور كامل. معاك مرتين.</div>
- <div class="rule">🎲 <b>أحداث:</b> في الدور 3 والدور 6 بيحصل حدث في مكان: 🎺 فرح شعبي (<bdi dir="ltr">+1</bdi> لكل كارت)، 🔦 النور قطع (<bdi dir="ltr">−1</bdi>)، 💰 موسم الرزق (نقط المكان <bdi dir="ltr">+2</bdi>).</div>
- <div class="rule">⏱ <b>أونلاين:</b> مفيش وقت محدد للدور. بس لو صاحبك لعب كارته، بيظهر لك عدّاد <b>15 ثانية</b>، ولو خلص من غير ما تلعب بيتلعب لك كارت عشوائي.</div>
- <div class="rule">📖 زرار «الكروت» في الرئيسية بيوريك كل الشخصيات وقدراتها.</div>
- <button class="big sec" id="rulesTour" style="min-height:46px">▶ شوف الشرح السريع</button>
- <button class="big" id="closeRules">تمام يا ريس</button>
+ <div class="rule"><b>اللعب:</b> دوس على كارت، وبعدين على المكان، وبعدين <b>دوس على الكارت تاني</b> عشان تأكّد. إنت وخصمك بتختاروا في السر والكروت بتتكشف مع بعض.</div>
+ <div class="rule"><b>الأماكن:</b> كل مكان بياخد 3 كروت من كل طرف. الأعلى قوة بياخد نقط المكان: القهوة (5)، السوق (4)، الموقف (3). التعادل = نص النقط.</div>
+ <div class="rule"><b>الأرقام:</b> الرقم اللي على الكارت في اللوحة هو قوته الحالية بعد القدرات: أخضر = زادت، أحمر = قلّت. ضغطة طويلة على أي كارت بتوريك تفاصيله.</div>
+ <div class="rule"><b>تبديل:</b> اختار كارت ودوس «تبديل» وبعدين دوس على الكارت تاني. بترمي الكارت وتسحب غيره، وده بيحسب دور كامل. معاك مرتين.</div>
+ <div class="rule"><b>أحداث:</b> في الدور 3 والدور 6 بيحصل حدث في مكان: فرح شعبي (<bdi dir="ltr">+1</bdi> لكل كارت)، النور قطع (<bdi dir="ltr">−1</bdi> لكل كارت)، موسم الرزق (نقط المكان <bdi dir="ltr">+2</bdi>).</div>
+ <div class="rule"><b>أونلاين:</b> مفيش وقت محدد للدور. بس لو صاحبك لعب كارته بيظهر لك عدّاد <b>15 ثانية</b>، ولو خلص من غير ما تلعب بيتلعب لك كارت عشوائي.</div>
+ <button class="btn o sm" id="rulesTour">شوف الشرح السريع</button>
+ <button class="btn p" id="closeRules">تمام</button>
 </div></div>
 
 <div class="overlay hidden z3" id="tour"><div class="modal">
- <div class="emoji-big" id="tourE" style="font-size:64px"></div><h2 id="tourT"></h2><p id="tourD"></p>
+ <div class="stepnum" id="tourN">1</div><h2 id="tourT"></h2><p id="tourD"></p>
  <div class="tourdots" id="tourDots"></div>
- <button class="big" id="tourNext">التالي</button>
- <button class="big sec" id="tourSkip" style="min-height:44px">تخطّي</button>
+ <button class="btn p" id="tourNext">التالي</button>
+ <button class="btn o sm" id="tourSkip">تخطّي</button>
 </div></div>
 
 <div class="upd hidden" id="upd"><span>في نسخة جديدة من اللعبة</span><button id="updBtn">حدّث</button></div>
@@ -380,56 +407,57 @@ input{font:inherit;color:var(--cream);-webkit-user-select:text;user-select:text}
 const $=id=>document.getElementById(id);
 const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 let COUNT_MS=15000,SPEED=1;
+const FAM={place:{n:'مكان',c:'#2f7a70'},sanad:{n:'سند',c:'#5a7a2e'},clash:{n:'مواجهة',c:'#a04a3a'},power:{n:'قوة',c:'#8a6420'},luck:{n:'مفاجأة',c:'#5c4a8a'}};
 const types=[
-{id:'qahwagi',name:'عم سيد القهوجي',short:'عم سيد',emoji:'☕',power:3,ability:'في القهوة +2',kind:'أصيل',weight:3},
-{id:'seller',name:'ست أم فتحي',short:'أم فتحي',emoji:'🧺',power:3,ability:'في السوق +2',kind:'جدعة',weight:3},
-{id:'driver',name:'سواق التوكتوك',short:'التوكتوك',emoji:'🛺',power:3,ability:'في الموقف +2',kind:'حريف',weight:3},
-{id:'local',name:'ابن البلد',short:'ابن البلد',emoji:'💪',power:2,ability:'يقوّي زمايله +1',kind:'سند',weight:3},
-{id:'star',name:'نجم الحارة',short:'النجم',emoji:'🎤',power:2,ability:'+1 لكل خصم هنا',kind:'شهرة',weight:2},
-{id:'mother',name:'الحاجة أم حسن',short:'أم حسن',emoji:'🧿',power:3,ability:'تضعف الخصم −2',kind:'بركة',weight:2},
-{id:'boss',name:'كبير الحارة',short:'الكبير',emoji:'👑',power:4,ability:'+2 لو معاه كارتين',kind:'هيبة',weight:2},
-{id:'fool',name:'الواد فلفل',short:'فلفل',emoji:'🪁',power:5,ability:'قوة صافية',kind:'فهلوي',weight:2},
-{id:'student',name:'طالب الهندسة',short:'المهندس',emoji:'📚',power:4,ability:'قوة صافية',kind:'شاطر',weight:2},
-{id:'cat',name:'قطة الحارة',short:'القطة',emoji:'🐈',power:1,ability:'+3 مع بتاع الفطير',kind:'مزاج',weight:1},
-{id:'feteer',name:'بتاع الفطير',short:'الفطير',emoji:'🥧',power:4,ability:'قوة صافية',kind:'لقمة',weight:2},
-{id:'guard',name:'بواب العمارة',short:'البواب',emoji:'🗝️',power:3,ability:'قوة صافية',kind:'عين',weight:2},
-{id:'singer',name:'المداح',short:'المداح',emoji:'🎙️',power:2,ability:'+1 لكل كارت ليك في الأماكن التانية',kind:'صوت',weight:2},
-{id:'thief',name:'النشّال',short:'النشّال',emoji:'🕵️',power:2,ability:'+2 لكل خصم قوته 4 فأكتر',kind:'خفّة',weight:2},
-{id:'sheikh',name:'الشيخ عبد الله',short:'الشيخ',emoji:'📿',power:3,ability:'يحميك من أم حسن',kind:'نور',weight:2},
-{id:'twin',name:'التوأم',short:'التوأم',emoji:'👯',power:3,ability:'+3 لو معاه توأمه',kind:'دم واحد',weight:3},
-{id:'gambler',name:'الواد زيكو',short:'زيكو',emoji:'🎲',power:0,ability:'قوته بالنرد من 1 لـ 6',kind:'حظ',weight:2},
-{id:'doctor',name:'الدكتور',short:'الدكتور',emoji:'🩺',power:3,ability:'+1 لكل كارت ضعيف (2 أو أقل) معاه',kind:'علاج',weight:2},
-{id:'parrot',name:'الببغاء',short:'الببغاء',emoji:'🦜',power:1,ability:'ياخد قوة أقوى كارت معاه',kind:'تقليد',weight:2},
-{id:'ghafir',name:'غفير الليل',short:'الغفير',emoji:'🌙',power:2,ability:'+3 لو نزل بعد الدور 5',kind:'سهر',weight:2}];
+{id:'qahwagi',name:'عم سيد القهوجي',short:'عم سيد',fam:'place',power:3,ability:'في القهوة +2',weight:3},
+{id:'seller',name:'ست أم فتحي',short:'أم فتحي',fam:'place',power:3,ability:'في السوق +2',weight:3},
+{id:'driver',name:'سواق التوكتوك',short:'التوكتوك',fam:'place',power:3,ability:'في الموقف +2',weight:3},
+{id:'local',name:'ابن البلد',short:'ابن البلد',fam:'sanad',power:2,ability:'+1 لكل كارت ليك معاه',weight:3},
+{id:'star',name:'نجم الحارة',short:'النجم',fam:'clash',power:2,ability:'+1 لكل كارت خصم في المكان',weight:2},
+{id:'mother',name:'الحاجة أم حسن',short:'أم حسن',fam:'clash',power:3,ability:'تنقّص قوة الخصم في المكان −2',weight:2},
+{id:'boss',name:'كبير الحارة',short:'الكبير',fam:'sanad',power:4,ability:'+2 لو معاه كارتين',weight:2},
+{id:'fool',name:'الواد فلفل',short:'فلفل',fam:'power',power:5,ability:'قوة صافية',weight:2},
+{id:'student',name:'طالب الهندسة',short:'المهندس',fam:'power',power:4,ability:'قوة صافية',weight:2},
+{id:'cat',name:'قطة الحارة',short:'القطة',fam:'sanad',power:1,ability:'+3 مع بتاع الفطير',weight:1},
+{id:'feteer',name:'بتاع الفطير',short:'الفطير',fam:'power',power:4,ability:'قوة صافية',weight:2},
+{id:'guard',name:'بواب العمارة',short:'البواب',fam:'power',power:3,ability:'قوة صافية',weight:2},
+{id:'singer',name:'المداح',short:'المداح',fam:'sanad',power:2,ability:'+1 لكل كارت ليك في الأماكن التانية',weight:2},
+{id:'thief',name:'النشّال',short:'النشّال',fam:'clash',power:2,ability:'+2 لكل خصم قوته 4 فأكتر',weight:2},
+{id:'sheikh',name:'الشيخ عبد الله',short:'الشيخ',fam:'clash',power:3,ability:'يحميك من أم حسن',weight:2},
+{id:'twin',name:'التوأم',short:'التوأم',fam:'sanad',power:3,ability:'+3 لو معاه توأمه',weight:3},
+{id:'gambler',name:'الواد زيكو',short:'زيكو',fam:'luck',power:0,ability:'قوته بالنرد من 1 لـ 6 وقت الكشف',weight:2},
+{id:'doctor',name:'الدكتور',short:'الدكتور',fam:'sanad',power:3,ability:'+1 لكل كارت ضعيف (2 أو أقل) معاه',weight:2},
+{id:'parrot',name:'الببغاء',short:'الببغاء',fam:'sanad',power:1,ability:'ياخد قوة أقوى كارت معاه',weight:2},
+{id:'ghafir',name:'غفير الليل',short:'الغفير',fam:'luck',power:2,ability:'+3 لو نزل بعد الدور 5',weight:2}];
 const TYPE=Object.create(null);types.forEach(t=>{TYPE[t.id]=t});
-const LANES=[
-{id:'cafe',name:'القهوة',emoji:'☕',points:5,tag:'قعدة المزاج'},
-{id:'market',name:'السوق',emoji:'🛍️',points:4,tag:'رزق وشطارة'},
-{id:'station',name:'الموقف',emoji:'🛺',points:3,tag:'الدنيا ماشية'}];
+const LANES=[{id:'cafe',name:'القهوة',points:5},{id:'market',name:'السوق',points:4},{id:'station',name:'الموقف',points:3}];
 const LANE_IDS=LANES.map(l=>l.id);
-const eventTypes={wedding:{name:'فرح شعبي',emoji:'🎺',desc:'+1 لكل كارت'},blackout:{name:'النور قطع',emoji:'🔦',desc:'−1 لكل كارت'},season:{name:'موسم الرزق',emoji:'💰',desc:'نقط المكان +2'}};
-const bidi=s=>s.replace(/([+−]\d+)/g,'\u2066$1\u2069');
+const eventTypes={wedding:{name:'فرح شعبي',desc:'+1 لكل كارت'},blackout:{name:'النور قطع',desc:'−1 لكل كارت'},season:{name:'موسم الرزق',desc:'نقط المكان +2'}};
+const bidi=s=>s.replace(/([+−]\d+)/g,'⁦$1⁩');
 types.forEach(t=>{t.ability=bidi(t.ability)});Object.values(eventTypes).forEach(e=>{e.desc=bidi(e.desc)});
 const DIFF={easy:{name:'هيّن',swing:.4,diff:.3,lane:.2,noise:4},normal:{name:'عادي',swing:.9,diff:.55,lane:.35,noise:2},hard:{name:'شرس',swing:1.1,diff:.35,lane:.3,noise:.6}};
-const AVATARS=[{e:'😎',lv:1},{e:'🤠',lv:1},{e:'🥸',lv:2},{e:'😈',lv:3},{e:'🦁',lv:4},{e:'🦅',lv:5},{e:'🐯',lv:6},{e:'👑',lv:8}];
-const BOT_AV='🤖',EMOTES=['😂','🔥','👏','😅','🤝','🙏'];
+const COLORS=[{id:'c1',n:'زيتي',c:'#2f7a70',lv:1},{id:'c2',n:'برونزي',c:'#8a6420',lv:1},{id:'c3',n:'زيتوني',c:'#5a7a2e',lv:2},{id:'c4',n:'طوبي',c:'#a04a3a',lv:3},{id:'c5',n:'بنفسجي',c:'#5c4a8a',lv:4},{id:'c6',n:'أزرق',c:'#2d5f8a',lv:5},{id:'c7',n:'عنابي',c:'#8a3a62',lv:6},{id:'c8',n:'ذهبي',c:'#b88a1e',lv:8}];
+const QUICK=['عاش!','حلوة دي','هههه','بالراحة عليا','حظ سعيد','جولة كمان؟'];
+const BOT='bot';
+const BOT_SVG='<svg viewBox="0 0 24 24" width="62%" height="62%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4.5V8"/><circle cx="12" cy="3.6" r="1"/><circle cx="9.5" cy="13" r="1.1" fill="currentColor"/><circle cx="14.5" cy="13" r="1.1" fill="currentColor"/><path d="M9.5 16.3h5"/></svg>';
 const ACH=[
-{id:'first_win',e:'🥇',n:'أول كسبة',d:'اكسب أي جولة'},
-{id:'sweep',e:'🧹',n:'كسّحت',d:'اكسب الأماكن التلاتة في جولة'},
-{id:'online_win',e:'👥',n:'جدع مع صحابك',d:'اكسب جولة أونلاين'},
-{id:'hard_win',e:'😈',n:'قلب الأسد',d:'اكسب الروبوت الشرس'},
-{id:'streak3',e:'🔥',n:'سلسلة ٣',d:'اكسب ٣ جولات ورا بعض ضد الروبوت'},
-{id:'daily',e:'📅',n:'ابن النهارده',d:'خلّص تحدي النهارده'},
-{id:'twins',e:'👯',n:'دم واحد',d:'اكسب مكان فيه التوأمين'},
-{id:'gambler6',e:'🎲',n:'حظ زيكو',d:'نزّل زيكو وطلع النرد 6'},
-{id:'veteran',e:'🎖️',n:'مخضرم',d:'العب ١٠ جولات'},
-{id:'days3',e:'📆',n:'مواظب',d:'العب ٣ أيام ورا بعض'},
-{id:'level5',e:'⭐',n:'المعلم',d:'وصّل لمستوى 5'}];
+{id:'first_win',n:'أول كسبة',d:'اكسب أي جولة'},
+{id:'sweep',n:'كسّحت',d:'اكسب الأماكن التلاتة في جولة'},
+{id:'online_win',n:'جدع مع صحابك',d:'اكسب جولة أونلاين'},
+{id:'hard_win',n:'قلب الأسد',d:'اكسب الروبوت الشرس'},
+{id:'streak3',n:'سلسلة ٣',d:'اكسب ٣ جولات ورا بعض ضد الروبوت'},
+{id:'daily',n:'ابن النهارده',d:'خلّص تحدي النهارده'},
+{id:'twins',n:'دم واحد',d:'اكسب مكان فيه التوأمين'},
+{id:'gambler6',n:'حظ زيكو',d:'نزّل زيكو وطلع النرد 6'},
+{id:'veteran',n:'مخضرم',d:'العب ١٠ جولات'},
+{id:'days3',n:'مواظب',d:'العب ٣ أيام ورا بعض'},
+{id:'level5',n:'المعلم',d:'وصّل لمستوى 5'}];
 
 /* ---------- تخزين ---------- */
 const LS='lamma_v3';
-let store={w:0,l:0,d:0,best:0,streak:0,bestStreak:0,daily:null,diff:'normal',sound:true,name:'',ow:0,ol:0,od:0,xp:0,days:0,lastDay:0,ach:{},avatar:'😎',seen:false,played:0};
+let store={w:0,l:0,d:0,best:0,streak:0,bestStreak:0,daily:null,diff:'normal',sound:true,name:'',ow:0,ol:0,od:0,xp:0,days:0,lastDay:0,ach:{},avatar:'c1',seen:false,played:0};
 try{const s=JSON.parse(localStorage.getItem(LS)||localStorage.getItem('lammet_elhara_v2')||'null');if(s&&typeof s==='object')store={...store,...s,ach:{...(s.ach||{})}}}catch(e){}
+if(!COLORS.some(c=>c.id===store.avatar))store.avatar='c1';
 function save(){try{localStorage.setItem(LS,JSON.stringify(store))}catch(e){}}
 const need=l=>60+40*(l-1);
 function levelInfo(xp){let l=1,r=xp;while(r>=need(l)){r-=need(l);l++}return{lvl:l,cur:r,next:need(l)}}
@@ -439,8 +467,8 @@ const dayNum=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86
 function mulberry32(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t^=t+Math.imul(t^t>>>7,61|t);return((t^t>>>14)>>>0)/4294967296}}
 function todayKey(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()}
 let ac=null;
-const SEQ={play:[[520,.06]],swap:[[400,.05],[520,.05]],event:[[440,.08],[660,.1]],reveal:[[392,.05],[523,.08]],win:[[523,.1],[659,.1],[784,.2]],lose:[[330,.14],[247,.24]],tie:[[440,.16]],emote:[[700,.06],[900,.06]],tick:[[880,.04]],level:[[523,.08],[659,.08],[784,.08],[1047,.2]]};
-function sfx(k){if(!store.sound)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();let t=ac.currentTime;for(const[f,d]of(SEQ[k]||[])){const o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.15,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+.02);t+=d}}catch(e){}}
+const SEQ={play:[[520,.05]],swap:[[400,.05],[520,.05]],event:[[440,.08],[660,.1]],reveal:[[392,.05],[523,.07]],win:[[523,.1],[659,.1],[784,.2]],lose:[[330,.14],[247,.24]],tie:[[440,.16]],emote:[[700,.05]],tick:[[880,.04]],level:[[523,.08],[659,.08],[784,.08],[1047,.2]],sel:[[620,.03]]};
+function sfx(k){if(!store.sound)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();let t=ac.currentTime;for(const[f,d]of(SEQ[k]||[])){const o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.12,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+.02);t+=d}}catch(e){}}
 function vib(p){if(!store.sound)return;try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
 
 /* ================= المحرك (عند المضيف / اللعب الفردي) ================= */
@@ -478,7 +506,7 @@ function calc(own3,op3,lane,events){
   vals.push(v);total+=v;
  }
  const pen=own.some(c=>c.id==='sheikh')?0:2*op.filter(c=>c.id==='mother').length;
- return{score:Math.max(0,total-pen),vals,pen,parts:own.map((c,i)=>c.emoji+fmt(vals[i]))};
+ return{score:Math.max(0,total-pen),vals,pen,parts:own.map((c,i)=>`${c.short} ${fmt(vals[i])}`)};
 }
 const res=(x,y,p)=>x>y?p:x===y?p/2:0;
 function totals(meB,oppB,events){
@@ -522,10 +550,10 @@ function resolve(G){
 }
 function logText(G,i){
  const parts=[];
- [i,1-i].forEach(k=>{const l=G.lastLog[k];if(!l)return;const who=k===i?'إنت':G.names[k],au=l.auto?' ⏱(تلقائي)':'';
+ [i,1-i].forEach(k=>{const l=G.lastLog[k];if(!l)return;const who=k===i?'إنت':G.names[k],au=l.auto?' (تلقائي بعد الوقت)':'';
   const t=TYPE[l.card?l.card.id:''];
   parts.push(l.t==='play'?`${who}: ${t.short}${l.card.id==='gambler'?` (نرد ${l.card.roll})`:''} في ${laneDef(l.lane).name}${au}`:`${who}: بدّل كارت${au}`)});
- return parts.join(' • ');
+ return parts.join(' · ');
 }
 const mn=c=>({uid:c.uid,id:c.id,roll:c.roll,pt:c.pt});
 const mb=b=>{const o={};LANE_IDS.forEach(l=>{o[l]=b[l].map(mn)});return o};
@@ -537,14 +565,15 @@ function viewFor(G,i,online){
   opp:{name:G.names[j],avatar:G.avatars[j],handCount:G.hands[j].length,board:mb(G.board[j]),swaps:G.swaps[j],submitted:!!G.pending[j]},
   anim:G.anim.slice(),newEvent:G.newEvent?{...G.newEvent}:null,log:logText(G,i),cd};
 }
-/* تنظيف أي View جاي من الشبكة: بنبني الكروت من بياناتنا المحلية بس */
+/* تنظيف أي View جاي من الشبكة: الكروت بتتبني من بياناتنا المحلية بالـ id بس */
+const validAv=a=>a===BOT||COLORS.some(x=>x.id===a);
 const hyd=c=>{const t=c&&typeof c==='object'?TYPE[c.id]:null;if(!t)return null;return{...t,uid:+c.uid||0,roll:c.roll==null?undefined:+c.roll||0,pt:+c.pt||0}};
 function hydrate(v){
  try{
   const num=(x,d=0)=>Number.isFinite(+x)?+x:d;
   const hb=b=>{const o={};LANE_IDS.forEach(l=>{o[l]=(b&&Array.isArray(b[l])?b[l]:[]).slice(0,3).map(hyd).filter(Boolean)});return o};
   const nm=s=>String(s==null?'':s).slice(0,14);
-  const av=a=>(a===BOT_AV||AVATARS.some(x=>x.e===a))?a:'🙂';
+  const av=a=>validAv(a)?a:'c1';
   const evOk=e=>e&&typeof e==='object'&&LANE_IDS.includes(e.lane)&&own(eventTypes,e.type);
   const act=p=>p&&(p.t==='play'||p.t==='swap')?{t:p.t,uid:num(p.uid),lane:LANE_IDS.includes(p.lane)?p.lane:undefined}:null;
   const m=v.me,o=v.opp;
@@ -582,7 +611,7 @@ function randomPlay(G,i){
 }
 
 /* ================= الشبكة (PeerJS) ================= */
-const PREFIX='lamma-v1-';
+const PREFIX='lamma-v2-';
 const Net={peer:null,conn:null,role:null,
  loadLib(){return new Promise((ok,no)=>{if(window.Peer)return ok();const urls=['https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js','https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js'];let k=0;const next=()=>{if(k>=urls.length)return no(new Error('lib'));const s=document.createElement('script');s.src=urls[k++];s.onload=()=>window.Peer?ok():next();s.onerror=next;document.head.append(s)};next()})},
  close(){const c=this.conn,p=this.peer;this.conn=null;this.peer=null;this.role=null;try{c&&c.close()}catch(e){}try{p&&p.destroy()}catch(e){}},
@@ -591,13 +620,17 @@ const Net={peer:null,conn:null,role:null,
 
 /* ================= حالة الواجهة ================= */
 let G=null,V=null,mode='single',isDaily=false,selUid=null,stage=null,showCalc=false,timers=[],botBusy=false,countTimer=null;
-let endShownId=null,statsCounted=new Set(),rematch=[false,false],oppWantsRematch=false,lastShare='',netGen=0,roomCode='',lastEmoteAt=0,wakeLock=null,toastT=null,cdKey='',cdLast=-1;
+let endShownId=null,statsCounted=new Set(),rematch=[false,false],oppWantsRematch=false,lastShare='',netGen=0,roomCode='',lastEmoteAt=0,lastInEmote=0,wakeLock=null,toastT=null,cdKey='',cdLast=-1;
 function later(fn,ms){const id=setTimeout(()=>{timers=timers.filter(x=>x!==id);fn()},ms*SPEED);timers.push(id)}
 function clearAll(){timers.forEach(clearTimeout);timers=[];clearTimeout(countTimer);botBusy=false}
 const myName=online=>{const n=(store.name||'').trim();return n||(online?'لاعب':'إنت')};
-const myAvatar=()=>AVATARS.some(a=>a.e===store.avatar)?store.avatar:'😎';
+const myAvatar=()=>{const c=COLORS.find(x=>x.id===store.avatar);return c&&levelInfo(store.xp).lvl>=c.lv?c.id:'c1'};
 const online_=()=>mode!=='single';
-const overlaysOpen=()=>[...document.querySelectorAll('.overlay,.screen')].some(e=>!e.classList.contains('hidden'));
+const initial=n=>{const s=String(n||'').trim();return !s||s==='إنت'||s==='لاعب'?'أنا':Array.from(s)[0]};
+function paintAv(el,av,name){
+ if(av===BOT){el.innerHTML=BOT_SVG;el.style.background='#33413e';el.style.color='#cfe0da';el.setAttribute('aria-label','روبوت')}
+ else{const col=COLORS.find(x=>x.id===av)||COLORS[0],t=initial(name);el.textContent=t;el.style.fontSize=t.length>1?'11px':'';el.style.background=col.c;el.style.color='#fff';el.setAttribute('aria-label',String(name||''))}
+}
 
 async function wake(){try{if('wakeLock' in navigator&&!wakeLock){wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null})}}catch(e){}}
 function unwake(){try{wakeLock&&wakeLock.release()}catch(e){}wakeLock=null}
@@ -611,7 +644,7 @@ function beginMatch(names,avatars,demo){
  G=newMatch(rnd,names,avatars);selUid=null;stage=null;rematch=[false,false];oppWantsRematch=false;
  ['end','rules','cats','lobby','msgBox','gmenu','sheet','confirm'].forEach(id=>$(id).classList.add('hidden'));
  if(!demo){$('home').classList.add('hidden');wake()}
- $('log').textContent='بسم الله... اختار كارتك وحطه في مكان!';
+ $('log').textContent='اختار كارت وحطه في مكان.';
  pushViews();
 }
 function startCountdown(){
@@ -645,15 +678,14 @@ function applyView(raw){
  if(fresh){endShownId=null;$('end').classList.add('hidden');resetEnd()}
  if(newTurn){selUid=null;stage=null}
  else if(selUid!=null&&!v.me.hand.some(c=>c.uid===selUid)){selUid=null;stage=null}
- if(v.anim.length){sfx('reveal');vib([20,30,20])}
- let log=v.log;
- if(v.newEvent){const e=eventTypes[v.newEvent.type];toast(`${e.emoji} ${e.name} في ${laneDef(v.newEvent.lane).name}!`,2200);sfx('event');vib(60)}
- if(log)$('log').textContent=log;
+ if(v.anim.length){sfx('reveal');vib([15,30,15])}
+ if(v.newEvent){const e=eventTypes[v.newEvent.type];toast(`${e.name} في ${laneDef(v.newEvent.lane).name}: ${e.desc}`,2400);sfx('event');vib(50)}
+ if(v.log)$('log').textContent=v.log;
  render();
  if(v.done&&endShownId!==v.id){endShownId=v.id;const id=v.id;later(()=>finishMatch(id),900)}
 }
 
-/* ---------- أفعال اللاعب ---------- */
+/* ---------- أفعال اللاعب: ضغطة تختار، ضغطة تانية تأكّد ---------- */
 const canAct=()=>!!V&&!V.done&&!V.me.pending;
 function act(a){
  if(!canAct())return;
@@ -663,13 +695,18 @@ function act(a){
 }
 function onCard(uid){
  if(!canAct())return;
- if(selUid===uid){selUid=null;stage=null}
- else{selUid=uid;if(stage&&stage.lane&&V.me.board[stage.lane].length>=3)stage=null}
- vib(6);render();
+ if(selUid===uid){
+  if(stage){confirmStage();return}
+  selUid=null;stage=null;
+ }else{
+  selUid=uid;if(stage&&stage.lane&&V.me.board[stage.lane].length>=3)stage=null;
+ }
+ sfx('sel');vib(6);render();
 }
 function onLane(id){
  if(!canAct())return;
- if(selUid==null){toast('اختار كارت الأول 👇',1200);return}
+ if(selUid==null){toast('اختار كارت من إيدك الأول',1300);return}
+ if(stage&&stage.lane===id){stage=null;render();return}
  if(V.me.board[id].length>=3){toast('المكان ده مليان',1200);return}
  stage={lane:id};vib(8);render();
 }
@@ -677,26 +714,26 @@ function onSwap(){
  if(!canAct())return;
  if(V.me.swaps<=0||V.deckCount<2){toast('خلصت التبديلات',1200);return}
  if(selUid==null){toast('اختار الكارت اللي عاوز تبدّله',1400);return}
- stage=stage&&stage.swap?null:{swap:true};sfx('swap');render();
+ stage=stage&&stage.swap?null:{swap:true};render();
 }
-function onConfirm(){
+function confirmStage(){
  if(!canAct()||!stage||selUid==null)return;
  const a=stage.swap?{t:'swap',uid:selUid}:{t:'play',uid:selUid,lane:stage.lane};
- selUid=null;stage=null;sfx('play');vib(15);act(a);
+ selUid=null;stage=null;sfx(a.t==='swap'?'swap':'play');vib(15);act(a);
 }
 
 /* ---------- العرض ---------- */
 function toast(text,ms=1800){const t=$('toast');t.textContent=text;t.classList.remove('hidden','show');void t.offsetWidth;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.add('hidden'),ms)}
 function cardEl(c,cls){
- const el=document.createElement('div');el.className='card '+(cls||'');
- const pw=c.id==='gambler'&&c.roll==null?'🎲':fmt(basePower(c));
- el.innerHTML=`<span class="bp">${pw}</span><span class="bk">${c.kind}</span><span class="be">${c.emoji}</span><span class="bn">${c.name}</span><span class="ba">${c.ability}</span>`;
+ const el=document.createElement('div');el.className='card '+(cls||'');el.style.setProperty('--fam',FAM[c.fam].c);
+ const num=c.id==='gambler'&&c.roll==null?'؟':fmt(basePower(c));
+ el.innerHTML=`<span class="fl">${FAM[c.fam].n}</span><span class="num">${num}</span><span class="nm">${c.name}</span><span class="ab">${c.ability}</span>`;
  return el;
 }
 function tileEl(c,val,o){
  o=o||{};const el=document.createElement('div');el.className='tile'+(o.fresh?' fresh':'')+(o.ghost?' ghost':'');
  const base=basePower(c),cls=val>base?'up':val<base?'down':'';
- el.innerHTML=`<span class="te">${c.emoji}</span><span class="tn">${c.short}</span><span class="tp ${cls}">${fmt(val)}</span>`;
+ el.innerHTML=`<span class="tn">${c.short}</span><span class="tp ${cls}">${fmt(val)}</span>`;
  el.setAttribute('aria-label',`${c.name} قوة ${fmt(val)}`);
  if(!o.ghost){
   let lp=null,fired=false;const clr=()=>{clearTimeout(lp);lp=null};
@@ -708,9 +745,9 @@ function tileEl(c,val,o){
  return el;
 }
 function openSheet(c,val){
- const host=$('sheetCard');host.innerHTML='';host.append(cardEl({...c,roll:c.roll},'big'));
+ const host=$('sheetCard');host.innerHTML='';host.append(cardEl({...c},'big'));
  const base=basePower(c);
- $('sheetTxt').textContent=c.id==='gambler'&&c.roll==null?c.ability:`قوتها الأساسية ${fmt(base)} • قوتها دلوقتي ${fmt(val==null?base:val)}. ${c.ability}`;
+ $('sheetTxt').textContent=c.id==='gambler'&&c.roll==null?c.ability:`القوة الأساسية ${fmt(base)} · القوة دلوقتي ${fmt(val==null?base:val)}`;
  $('sheet').classList.remove('hidden');
 }
 const ghostOf=c=>({...c,pt:V.turn,roll:c.id==='gambler'?3.5:c.roll});
@@ -718,21 +755,20 @@ function render(){
  if(!V)return;
  const me=V.me,opp=V.opp,online=online_(),act_=canAct();
  const real=totals(me.board,opp.board,V.events);
- $('meScore').textContent=real.ps;$('oppScore').textContent=real.bs;
+ $('meScore').textContent=fmt(real.ps);$('oppScore').textContent=fmt(real.bs);
  $('meName').textContent=me.name;$('oppName').textContent=opp.name;
- $('meAv').textContent=me.avatar;$('oppAv').textContent=opp.avatar;
+ paintAv($('meAv'),me.avatar,me.name);paintAv($('oppAv'),opp.avatar,opp.name);
  const pend=me.pending;
- $('oppSt').textContent=V.done?'':online?(opp.submitted?'✅ لعب':'بيفكر...'):(pend?'بيفكر...':'مستنيك');
+ $('oppSt').textContent=V.done?'':online?(opp.submitted?'لعب كارته':'بيفكر...'):(pend?'بيفكر...':'مستنيك');
  $('oppSt').className='st'+(online&&opp.submitted&&!V.done?' ready':'');
- $('meSt').textContent=V.done?'':pend?'✔ جاهز':'دورك';
+ $('meSt').textContent=V.done?'':pend?'جاهز':'دورك';
  $('meSt').className='st'+(pend&&!V.done?' ready':'');
  const pips=$('pips');if(pips.children.length!==8){pips.innerHTML='';for(let i=0;i<8;i++){const p=document.createElement('i');p.className='pip';pips.append(p)}}
- [...pips.children].forEach((p,i)=>{p.className='pip'+(i<V.turn-1||(V.done&&i<8)?' done':i===V.turn-1?' now':'')});
- $('rtxt').textContent=V.done?'خلصت!':`الدور ${V.turn} / 8`;
+ [...pips.children].forEach((p,i)=>{p.className='pip'+(i<V.turn-1||V.done?' done':i===V.turn-1?' now':'')});
+ $('rtxt').textContent=V.done?'خلصت':`الدور ${V.turn} من 8`;
  $('calcBtn').classList.toggle('on',showCalc);$('calcBtn').setAttribute('aria-pressed',String(showCalc));
- $('events').innerHTML=V.events.length?V.events.map(e=>{const ev=eventTypes[e.type];return`<span class="evc">${ev.emoji} ${ev.name} في ${laneDef(e.lane).name}: ${ev.desc}</span>`}).join(''):'<span class="evc">🎲 أول حدث في الحارة هييجي في الدور 3</span>';
+ $('events').innerHTML=V.events.length?V.events.map(e=>{const ev=eventTypes[e.type];return`<span class="evc"><b>${ev.name}</b> في ${laneDef(e.lane).name}: ${ev.desc}</span>`}).join(''):'<span class="evc">أول حدث في الحارة هييجي في الدور 3</span>';
  $('emoteBtn').classList.toggle('hidden',!online);if(!online)$('tray').classList.add('hidden');
- /* كارت شبح: اللي اخترته لسه ما اتأكدش أو اتبعت */
  const sel=selUid!=null?me.hand.find(c=>c.uid===selUid):null;
  const sentCard=pend?me.hand.find(c=>c.uid===pend.uid):null;
  let gCard=null,gLane=null;
@@ -746,14 +782,13 @@ function render(){
   el.className='lane'+(act_&&sel&&room&&!stage?' elig':'')+(gLane===l.id?' staged':'')+(!room?' full':'');
   el.tabIndex=0;el.setAttribute('role','button');
   el.setAttribute('aria-label',`${l.name}، ${pts} نقط. قوتك ${fmt(A.score)} مقابل ${fmt(B.score)}`);
-  el.innerHTML=`<div class="lh"><span class="ln">${l.emoji} ${l.name}</span><span class="lp">${pts}</span></div>`+(ev?`<div class="evb">${eventTypes[ev.type].emoji} ${eventTypes[ev.type].name}</div>`:'');
+  el.innerHTML=`<div class="lh"><span class="ln">${l.name}</span><span class="lp">${pts} نقط</span></div>`+(ev?`<div class="evb">${eventTypes[ev.type].name}</div>`:'');
   const os=document.createElement('div');os.className='stack o';
-  const oc=B.vals;opp.board[l.id].forEach((c,i)=>os.append(tileEl(c,oc[i],{fresh:V.anim.includes(c.uid)})));
-  for(let i=opp.board[l.id].length;i<3;i++){const s=document.createElement('div');s.className='slot';s.textContent='؟';os.append(s)}
-  el.insertBefore(os,null);
+  opp.board[l.id].forEach((c,i)=>os.append(tileEl(c,B.vals[i],{fresh:V.anim.includes(c.uid)})));
+  for(let i=opp.board[l.id].length;i<3;i++){const s=document.createElement('div');s.className='slot';os.append(s)}
   const vs=document.createElement('div');vs.className='vs';
   const lead=A.score>B.score?'m':B.score>A.score?'o':'';
-  vs.innerHTML=`<span class="pw o${lead==='o'?' lead':''}">${fmt(B.score)}${B.pen?`<small>${bidi('−'+B.pen)}🧿</small>`:''}</span><i>ضد</i><span class="pw m${lead==='m'?' lead':''}">${fmt(A.score)}${A.pen?`<small>${bidi('−'+A.pen)}🧿</small>`:''}</span>`;
+  vs.innerHTML=`<span class="pw o${lead==='o'?' lead':''}">${fmt(B.score)}${B.pen?`<small>${bidi('−'+B.pen)}</small>`:''}</span><i>ضد</i><span class="pw m${lead==='m'?' lead':''}">${fmt(A.score)}${A.pen?`<small>${bidi('−'+A.pen)}</small>`:''}</span>`;
   if(act_&&sel&&room&&!stage){
    const g=ghostOf(sel),sm={...me.board,[l.id]:[...me.board[l.id],g]};
    const A1=calc(sm,opp.board,l.id,V.events),B1=calc(opp.board,sm,l.id,V.events);
@@ -761,14 +796,12 @@ function render(){
    gs.className='gain'+(d<0?' neg':'');gs.textContent=bidi((d>=0?'+':'−')+fmt(Math.abs(d)));vs.querySelector('i').replaceWith(gs);
   }
   const ms=document.createElement('div');ms.className='stack m';
-  const mc=A.vals;me.board[l.id].forEach((c,i)=>ms.append(tileEl(c,mc[i],{fresh:V.anim.includes(c.uid)})));
+  me.board[l.id].forEach((c,i)=>ms.append(tileEl(c,A.vals[i],{fresh:V.anim.includes(c.uid)})));
   let used=me.board[l.id].length;
-  if(gCard&&gLane===l.id){ms.append(tileEl(gCard,mc[used],{ghost:true}));used++}
-  for(let i=used;i<3;i++){const s=document.createElement('div');s.className='slot';s.textContent='+';ms.append(s)}
-  el.append(vs,ms);
-  /* ترتيب الصفوف: الهيدر ثم خصم ثم مقارنة ثم إنت */
-  el.insertBefore(os,vs);
-  if(showCalc){const cd=document.createElement('div');cd.className='calc';cd.innerHTML=`😎 ${A.parts.join(' + ')||'—'}${A.pen?` − ${A.pen}🧿`:''} = <b>${fmt(A.score)}</b><br>${opp.avatar} ${B.parts.join(' + ')||'—'}${B.pen?` − ${B.pen}🧿`:''} = <b>${fmt(B.score)}</b>`;el.append(cd)}
+  if(gCard&&gLane===l.id){ms.append(tileEl(gCard,A.vals[used],{ghost:true}));used++}
+  for(let i=used;i<3;i++){const s=document.createElement('div');s.className='slot';ms.append(s)}
+  el.append(os,vs,ms);
+  if(showCalc){const cd=document.createElement('div');cd.className='calc';cd.textContent=`إنت: ${A.parts.join(' + ')||'—'}${A.pen?` − ${A.pen}`:''} = ${fmt(A.score)}`;const c2=document.createElement('div');c2.textContent=`الخصم: ${B.parts.join(' + ')||'—'}${B.pen?` − ${B.pen}`:''} = ${fmt(B.score)}`;cd.append(c2);el.append(cd)}
   el.addEventListener('click',()=>onLane(l.id));
   el.addEventListener('keydown',k=>{if(k.key==='Enter'||k.key===' '){k.preventDefault();onLane(l.id)}});
   lanes.append(el);
@@ -777,45 +810,37 @@ function render(){
  /* اليد */
  const hand=$('hand');hand.innerHTML='';hand.style.setProperty('--n',String(Math.max(4,me.hand.length)));
  me.hand.forEach(c=>{
-  const e=cardEl(c,'hand');
-  if(selUid===c.uid)e.classList.add('sel');
-  if(pend&&pend.uid===c.uid)e.classList.add('sent');
-  e.tabIndex=0;e.setAttribute('role','button');e.setAttribute('aria-pressed',String(selUid===c.uid));
-  e.setAttribute('aria-label',`${c.name}، القوة ${c.id==='gambler'?'بالنرد':c.power}، ${c.ability}`);
+  const e=cardEl(c,'hand'),isSel=selUid===c.uid;
+  if(isSel)e.classList.add('sel');
+  if(isSel&&stage){const t=document.createElement('span');t.className='tag';t.textContent=stage.swap?'دوس للتبديل':'دوس للتأكيد';e.append(t)}
+  if(pend&&pend.uid===c.uid){e.classList.add('sent');const t=document.createElement('span');t.className='tag';t.textContent='اتبعت';e.append(t)}
+  e.tabIndex=0;e.setAttribute('role','button');e.setAttribute('aria-pressed',String(isSel));
+  e.setAttribute('aria-label',`${c.name}، القوة ${c.id==='gambler'?'بالنرد':c.power}، ${c.ability}${isSel&&stage?'. دوس تاني للتأكيد':''}`);
   e.addEventListener('click',()=>onCard(c.uid));
   e.addEventListener('keydown',k=>{if(k.key==='Enter'||k.key===' '){k.preventDefault();onCard(c.uid)}});
   hand.append(e);
  });
- /* الشريط الإرشادي وزراير الأكشن */
+ /* السطر الإرشادي */
  const info=$('infoLn');
  if(V.done)info.textContent='';
- else if(pend)info.textContent=pend.t==='swap'?'🔄 هتبدّل كارتك. الكشف لما الطرفين يخلصوا':'✔ اخترت. الكشف لما الطرفين يخلصوا';
- else if(sel){
-  info.innerHTML=`${sel.emoji} <b>${sel.name}</b> • ${sel.ability}`;
-  if(stage&&stage.lane)info.append(document.createTextNode(` → ${laneDef(stage.lane).name}`));
-  else if(stage&&stage.swap)info.append(document.createTextNode(' → تبديل'));
- }else info.textContent='اختار كارت من إيدك 👇';
- const cb=$('confirmBtn');
- cb.classList.remove('nudge');
- if(V.done){cb.disabled=true;cb.textContent='خلصت'}
- else if(pend){cb.disabled=true;cb.textContent=online?`⏳ مستني ${opp.name}`:'⏳ الكشف...'}
- else if(!sel){cb.disabled=true;cb.textContent='اختار كارت'}
- else if(!stage){cb.disabled=true;cb.textContent='اختار المكان'}
- else{cb.disabled=false;cb.textContent=stage.swap?'✔ أكّد التبديل':'✔ أكّد اللعب';cb.classList.add('nudge')}
+ else if(pend)info.textContent=online?`اخترت. مستني ${opp.name}`:'اخترت. الكشف دلوقتي';
+ else if(sel&&stage){info.innerHTML=`<span class="cta"></span>`;info.firstChild.textContent=stage.swap?`دوس على «${sel.short}» تاني عشان تبدّله`:`دوس على «${sel.short}» تاني عشان تنزّله في ${laneDef(stage.lane).name}`}
+ else if(sel){info.innerHTML=`<b>${sel.name}</b>: ${sel.ability}. اختار المكان`}
+ else info.textContent='اختار كارت من إيدك';
  $('swapLeft').textContent=me.swaps;
  $('swapBtn').disabled=!act_||me.swaps<=0||V.deckCount<2;
  $('swapBtn').classList.toggle('on',!!(stage&&stage.swap));
  syncTimer();
 }
 
-/* ---------- العدّاد (موشن جرافيك) ---------- */
+/* ---------- العدّاد ---------- */
 const RING=213.63;
 function syncTimer(){
  const el=$('cd'),cd=V&&!V.done?V.cd:null;
  if(!cd){el.classList.add('hidden');$('vig').className='vig';cdKey='';cdLast=-1;return}
  const left=Math.max(0,cd.until-Date.now()),key=V.id+':'+V.turn+':'+cd.forMe;
  const frac=Math.min(1,left/COUNT_MS),num=Math.ceil(left/1000),urgent=left<=5000;
- if(key!==cdKey){cdKey=key;cdLast=-1;el.className='cd '+(cd.forMe?'me':'opp');(cd.forMe?$('lanewrap'):$('oppBar')).append(el);$('cdLbl').textContent=cd.forMe?'اتأخرت! العب بسرعة':'مستنيين صاحبك';if(cd.forMe){vib([40,40,40]);sfx('event')}}
+ if(key!==cdKey){cdKey=key;cdLast=-1;el.className='cd '+(cd.forMe?'me':'opp');(cd.forMe?$('lanewrap'):$('oppBar')).append(el);$('cdLbl').textContent=cd.forMe?'صاحبك لعب. دورك':'';if(cd.forMe){vib([40,40,40]);sfx('event')}}
  el.classList.remove('hidden');el.classList.toggle('urgent',urgent);
  $('cdFg').style.strokeDashoffset=String(RING*(1-frac));
  $('cdNum').textContent=String(num);
@@ -826,8 +851,9 @@ function syncTimer(){
 setInterval(syncTimer,200);
 
 /* ---------- النهاية والتقدّم ---------- */
-function statsHTML(){return`✅ كسبت ${store.w} • ❌ خسرت ${store.l} • 🤝 تعادل ${store.d}<br>🔥 أطول سلسلة انتصارات ${store.bestStreak} • ⭐ أعلى نقط ${store.best}`+((store.ow+store.ol+store.od)?`<br>👥 أونلاين: كسبت ${store.ow} • خسرت ${store.ol} • تعادل ${store.od}`:'')}
-function resetEnd(){$('againBtn').disabled=false;$('againBtn').textContent='نلعب جولة كمان 🔁';$('endNote').textContent=''}
+function statsHTML(){return[['كسبات',store.w+store.ow],['خسارات',store.l+store.ol],['أطول سلسلة',store.bestStreak],['أعلى نقط',fmt(store.best)]].map(([n,v])=>`<div><b>${v}</b><span>${n}</span></div>`).join('')}
+function statNote(){return(store.ow+store.ol+store.od)?`أونلاين: ${store.ow} كسبة · ${store.ol} خسارة · ${store.od} تعادل`:''}
+function resetEnd(){$('againBtn').disabled=false;$('againBtn').textContent='نلعب جولة كمان';$('endNote').textContent=''}
 function checkAch(c){
  const got=[],give=id=>{if(!store.ach[id]){store.ach[id]=Date.now();got.push(ACH.find(a=>a.id===id))}};
  if(c.win)give('first_win');
@@ -865,22 +891,23 @@ function finishMatch(id){
   newAch=checkAch({win,sweep,twins,gam6,online,daily:!online&&isDaily});
   save();
  }
- sfx(lvUp?'level':win?'win':lose?'lose':'tie');vib(win?[60,40,60,40,120]:[80]);
- const on=V.opp.name;
- $('endEmoji').textContent=win?'🏆':lose?'😅':'🤝';
- $('endTitle').textContent=online?(win?'كسبت صاحبك! 🔥':lose?`${on} كسب المرادي`:'تعادل يا ولاد الحلال!'):(win?'الحارة حارتك يا معلم!':lose?'المعلم روبوت كسب المرادي':'تعادل يا ولاد الحلال!');
- $('endDesc').textContent=`${V.me.name} ${fmt(ps)} — ${on} ${fmt(bs)}. ${win?'كده الكلام ولا بلاش!':lose?'شد حيلك وخد تارك في الجولة الجاية.':'قعدة صلح ونلعب تاني؟'}`;
- $('endLanes').innerHTML=detail.map(x=>`<div class="${x.p>x.q?'w':x.p<x.q?'l':''}">${x.l.emoji}<br>${x.l.name}<br>${fmt(x.a)} : ${fmt(x.b)}<br>${x.p>x.q?'✔ ليك':x.p<x.q?'✖ للخصم':'تعادل'}</div>`).join('');
+ sfx(lvUp?'level':win?'win':lose?'lose':'tie');vib(win?[50,40,50,40,100]:[70]);
+ const on=V.opp.name,w=$('endWord');
+ w.textContent=win?'كسبت':lose?'خسرت':'تعادل';w.className='result '+(win?'w':lose?'l':'d');
+ $('endSub').textContent=online?(win?'كسبت صاحبك، عاش!':lose?`${on} كسب المرادي`:'قعدة صلح ونلعب تاني؟'):(win?'الحارة حارتك يا معلم!':lose?'شد حيلك وخد تارك الجولة الجاية':'قعدة صلح ونلعب تاني؟');
+ $('esMe').textContent=fmt(ps);$('esOp').textContent=fmt(bs);$('esMeN').textContent=V.me.name;$('esOpN').textContent=on;
+ $('endLanes').innerHTML=detail.map(x=>`<div class="${x.p>x.q?'w':x.p<x.q?'l':''}"><b>${x.l.name}</b>${fmt(x.a)} : ${fmt(x.b)}<br>${x.p>x.q?'ليك':x.p<x.q?'للخصم':'تعادل'}</div>`).join('');
  $('xpBox').classList.toggle('hidden',!counted);
  if(counted){
-  $('xpGain').textContent=`+${gain} خبرة`;$('xpLvl').textContent=lvUp?`🎉 مستوى ${after.lvl}!`:`مستوى ${after.lvl}`;
+  $('xpGain').textContent=`+${gain} خبرة`;$('xpLvl').textContent=lvUp?`وصلت مستوى ${after.lvl}`:`مستوى ${after.lvl}`;
   $('xpFill').style.width=(lvUp?0:before.cur/before.next*100)+'%';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{$('xpFill').style.width=(after.cur/after.next*100)+'%'}));
  }
- $('endAch').innerHTML=newAch.map(a=>`<div class="newach"><span style="font-size:24px">${a.e}</span><span>إنجاز جديد: ${a.n}</span></div>`).join('')+(lvUp?(()=>{const u=AVATARS.filter(a=>a.lv===after.lvl);return u.length?`<div class="newach"><span style="font-size:24px">${u[0].e}</span><span>فتحت صورة جديدة!</span></div>`:''})():'');
- $('endStats').innerHTML=statsHTML()+(dailyDone?'<br>(نتيجة تحدي النهارده الأولى هي اللي اتحسبت)':'')+(store.days>1?`<br>🔥 ${store.days} أيام ورا بعض`:'');
- lastShare=`🪬 لَمّة${online?' (أونلاين)':isDaily?' (تحدي النهارده)':` (${DIFF[store.diff].name})`}\n${win?'🏆':lose?'😅':'🤝'} ${V.me.name} ${fmt(ps)} - ${fmt(bs)} ${on}\n`+detail.map(x=>x.p>x.q?'🟩':x.p<x.q?'🟥':'🟨').join('')+`\n${location.origin&&location.origin!=='null'?location.origin+location.pathname:''}`;
- $('endNote').textContent=oppWantsRematch?`${on} عاوز يلعب تاني!`:'';
+ const unlocked=lvUp?COLORS.filter(c=>c.lv>before.lvl&&c.lv<=after.lvl):[];
+ $('endAch').innerHTML=newAch.map(a=>`<div class="newach"><i class="medal"></i><span>إنجاز جديد: ${a.n}</span></div>`).join('')+unlocked.map(c=>`<div class="newach"><i class="sw" style="background:${c.c}"></i><span>فتحت لون جديد: ${c.n}</span></div>`).join('')+(dailyDone?'<div class="mini" style="margin-top:8px">نتيجة تحدي النهارده الأولى هي اللي اتحسبت</div>':'');
+ const sq=detail.map(x=>x.p>x.q?'🟩':x.p<x.q?'🟥':'🟨').join('');
+ lastShare=`لَمّة${online?' · أونلاين':isDaily?' · تحدي النهارده':` · ${DIFF[store.diff].name}`}\n${win?'كسبت':lose?'خسرت':'تعادل'} ${fmt(ps)} - ${fmt(bs)} ضد ${on}\n${sq}\n${location.origin&&location.origin!=='null'?location.origin+location.pathname:''}`;
+ $('endNote').textContent=oppWantsRematch?`${on} عاوز يلعب تاني`:'';
  $('end').classList.remove('hidden');
  refreshHome();
 }
@@ -889,40 +916,47 @@ function finishMatch(id){
 function refreshHome(){
  document.querySelectorAll('#diffSeg button').forEach(b=>{const on=b.dataset.d===store.diff;b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on))});
  const li=levelInfo(store.xp);
- $('avBtn').textContent=myAvatar();$('nameIn').value=store.name||'';
- $('lvTxt').textContent=`مستوى ${li.lvl}`;$('xpTxt').textContent=`${li.cur}/${li.next} خبرة`;$('xpFillHome').style.width=(li.cur/li.next*100)+'%';
- const sc=$('streakChip');const alive=store.lastDay>=dayNum()-1&&store.days>0;sc.classList.toggle('hidden',!alive);sc.textContent=`🔥 ${store.days} ${store.days===1?'يوم':'أيام'} ورا بعض`;
- $('winChip').textContent=`🏆 ${store.w+store.ow} كسبة`;
+ paintAv($('avBtn'),myAvatar(),myName(false));$('nameIn').value=store.name||'';
+ $('lvTxt').textContent=`مستوى ${li.lvl}`;$('xpTxt').textContent=`${li.cur} / ${li.next} خبرة`;$('xpFillHome').style.width=(li.cur/li.next*100)+'%';
+ const sc=$('streakChip'),alive=store.lastDay>=dayNum()-1&&store.days>0;sc.classList.toggle('hidden',!alive);sc.textContent=`${store.days} ${store.days===1?'يوم':'أيام'} ورا بعض`;
+ $('winChip').textContent=`${store.w+store.ow} كسبة`;
  const dDone=store.daily&&store.daily.key===todayKey();
  $('dailyBadge').classList.toggle('hidden',!!dDone);
- $('dailyNote').textContent=dDone?`لعبت تحدي النهارده: ${fmt(store.daily.ps)} - ${fmt(store.daily.bs)}`:'';
- $('introStats').innerHTML=statsHTML();
- $('soundIc').textContent=store.sound?'🔊':'🔇';
+ $('dailyNote').textContent=dDone?`تحدي النهارده: ${fmt(store.daily.ps)} - ${fmt(store.daily.bs)}`:'';
+ $('statGrid').innerHTML=statsHTML();$('statNote').textContent=statNote();
+ $('soundTxt').textContent=store.sound?'شغال':'مقفول';
 }
 function showHome(){$('home').classList.remove('hidden');$('home').scrollTop=0;refreshHome();unwake()}
-function startSingle(daily){netGen++;Net.close();mode='single';isDaily=daily;beginMatch([myName(false),'المعلم روبوت'],[myAvatar(),BOT_AV])}
+function startSingle(daily){netGen++;Net.close();mode='single';isDaily=daily;beginMatch([myName(false),'المعلم روبوت'],[myAvatar(),BOT])}
 function goMenu(){
  netGen++;Net.close();mode='single';isDaily=false;
- beginMatch([myName(false),'المعلم روبوت'],[myAvatar(),BOT_AV],true);showHome();
+ beginMatch([myName(false),'المعلم روبوت'],[myAvatar(),BOT],true);showHome();
 }
 function showMsg(text){$('msgText').textContent=text;$('msgBox').classList.remove('hidden')}
 function ask(text,yes){$('confirmTxt').textContent=text;$('confirm').classList.remove('hidden');$('confirmYes').onclick=()=>{$('confirm').classList.add('hidden');yes()}}
-function buildCatalog(){const g=$('catGrid');g.innerHTML='';types.forEach(t=>g.append(cardEl({...t},'mid')))}
+function buildCatalog(){
+ $('famKey').innerHTML=Object.values(FAM).map(f=>`<span style="--c:${f.c}">${f.n}</span>`).join('');
+ const g=$('catGrid');g.innerHTML='';types.forEach(t=>g.append(cardEl({...t},'mid')));
+}
 function buildAvatars(){
  const g=$('avGrid'),lv=levelInfo(store.xp).lvl;g.innerHTML='';
- AVATARS.forEach(a=>{const b=document.createElement('button'),ok=lv>=a.lv;b.textContent=a.e;
-  if(a.e===myAvatar())b.classList.add('cur');if(!ok){b.classList.add('lock');const s=document.createElement('small');s.textContent=`🔒 مستوى ${a.lv}`;b.append(s)}
-  b.setAttribute('aria-label',ok?'صورة':`مقفولة لحد مستوى ${a.lv}`);
-  b.onclick=()=>{if(!ok){toast(`بتتفتح عند مستوى ${a.lv}`,1400);return}store.avatar=a.e;save();buildAvatars();refreshHome()};g.append(b)});
+ COLORS.forEach(c=>{const b=document.createElement('button'),ok=lv>=c.lv,t=initial(myName(false));b.textContent=t;if(t.length>1)b.style.fontSize='14px';b.style.background=c.c;
+  if(c.id===myAvatar())b.classList.add('cur');
+  const s=document.createElement('small');s.textContent=ok?c.n:`مستوى ${c.lv}`;b.append(s);if(!ok)b.classList.add('lock');
+  b.setAttribute('aria-label',ok?c.n:`${c.n}، بيتفتح عند مستوى ${c.lv}`);
+  b.onclick=()=>{if(!ok){toast(`بيتفتح عند مستوى ${c.lv}`,1400);return}store.avatar=c.id;save();buildAvatars();refreshHome()};g.append(b)});
 }
-function buildAch(){$('achList').innerHTML=ACH.map(a=>{const on=!!store.ach[a.id];return`<div class="achl${on?'':' off'}"><span class="ai">${on?a.e:'🔒'}</span><div><b>${a.n}</b><span>${a.d}</span></div></div>`}).join('')}
+function buildAch(){
+ const box=$('achList');box.innerHTML='';
+ ACH.forEach(a=>{const on=!!store.ach[a.id],r=document.createElement('div');r.className='achl'+(on?'':' off');r.innerHTML='<i class="medal"></i><div><b></b><span></span></div>';r.querySelector('b').textContent=a.n;r.querySelector('span').textContent=on?a.d:`${a.d} (لسه)`;box.append(r)});
+}
 const TOUR=[
-{e:'🃏',t:'اختار كارت',d:'كل دور بتختار كارت من إيدك. الرقم اللي فوقه هو قوته، والقدرة بتزوّدها أو بتنقّصها حسب المكان.'},
-{e:'📍',t:'حطه في مكان',d:'٣ أماكن: القهوة (٥ نقط)، السوق (٤)، الموقف (٣). دوس على المكان وبعدين «أكّد».'},
-{e:'⚡',t:'الكشف مع بعض',d:'إنت وخصمك بتختاروا في السر، والكروت بتتكشف مع بعض. وأونلاين لو صاحبك لعب، بيبدأ لك عدّاد ١٥ ثانية.'},
-{e:'🏆',t:'اكسب الأماكن',d:'اللي قوته أعلى في المكان بياخد نقطه. بعد ٨ أدوار الأكتر نقط يكسب. بالتوفيق يا معلم!'}];
+{t:'اختار كارت',d:'الرقم الكبير على الكارت هو قوته، والقدرة مكتوبة تحت. اللون فوق بيقولك نوعه.'},
+{t:'اختار المكان',d:'٣ أماكن: القهوة (٥ نقط)، السوق (٤)، الموقف (٣). دوس على المكان، وهتشوف الكارت فيه قبل ما تأكّد.'},
+{t:'دوس على الكارت تاني',d:'الضغطة التانية على نفس الكارت بتأكّد اللعب. لو غيرت رأيك دوس على المكان تاني أو اختار كارت غيره.'},
+{t:'اكسب الأماكن',d:'إنت وخصمك بتختاروا في السر والكروت بتتكشف مع بعض. اللي قوته أعلى في المكان بياخد نقطه، وبعد ٨ أدوار الأكتر نقط يكسب.'}];
 let tourI=0;
-function renderTour(){const s=TOUR[tourI];$('tourE').textContent=s.e;$('tourT').textContent=s.t;$('tourD').textContent=s.d;$('tourDots').innerHTML=TOUR.map((_,i)=>`<i class="${i===tourI?'on':''}"></i>`).join('');$('tourNext').textContent=tourI===TOUR.length-1?'يلا نلعب! 🔥':'التالي'}
+function renderTour(){const s=TOUR[tourI];$('tourN').textContent=String(tourI+1);$('tourT').textContent=s.t;$('tourD').textContent=s.d;$('tourDots').innerHTML=TOUR.map((_,i)=>`<i class="${i===tourI?'on':''}"></i>`).join('');$('tourNext').textContent=tourI===TOUR.length-1?'يلا نلعب':'التالي'}
 function showTour(){tourI=0;renderTour();$('tour').classList.remove('hidden')}
 function endTour(){$('tour').classList.add('hidden');if(!store.seen){store.seen=true;save()}}
 
@@ -944,7 +978,7 @@ async function hostRoom(){
    if(gen!==netGen)return;
    if(Net.conn&&Net.conn.open){try{conn.close()}catch(e){}return}
    Net.conn=conn;conn.on('data',m=>onNetData(m,gen));conn.on('close',()=>onNetClose(gen));
-   lobbyState('wait','صاحبك دخل! بنبدأ...');
+   lobbyState('wait','صاحبك دخل. بنبدأ...');
   });
  };
  open();
@@ -959,7 +993,7 @@ async function joinRoom(code){
  peer.on('open',()=>{
   if(gen!==netGen)return;
   const conn=peer.connect(PREFIX+code,{reliable:true});Net.conn=conn;
-  conn.on('open',()=>{if(gen!==netGen)return;conn.send({k:'hello',name:myName(true),avatar:myAvatar()});lobbyState('wait','اتّصلنا! مستنيين اللعبة تبدأ...')});
+  conn.on('open',()=>{if(gen!==netGen)return;conn.send({k:'hello',name:myName(true),avatar:myAvatar()});lobbyState('wait','اتّصلنا. مستنيين اللعبة تبدأ...')});
   conn.on('data',m=>onNetData(m,gen));conn.on('close',()=>onNetClose(gen));
   setTimeout(()=>{if(gen===netGen&&Net.conn===conn&&!conn.open)lobbyState('main','مش قادر أوصل للأوضة. اتأكد من الكود والإنترنت.')},12000);
  });
@@ -969,17 +1003,17 @@ function onNetData(m,gen){
  if(Net.role==='host'){
   if(m.k==='hello'){
    let pn=String(m.name==null?'صاحبك':m.name).slice(0,14)||'صاحبك';if(pn===myName(true))pn+=' 2';
-   const pa=AVATARS.some(a=>a.e===m.avatar)?m.avatar:'🙂';
+   const pa=COLORS.some(c=>c.id===m.avatar)?m.avatar:'c1';
    if(mode!=='host'){mode='host';isDaily=false;beginMatch([myName(true),pn],[myAvatar(),pa])}else{G.names[1]=pn;G.avatars[1]=pa;pushViews()}
   }else if(m.k==='act'&&G&&mode==='host'){
    const a=m.a&&typeof m.a==='object'?{t:m.a.t,uid:m.a.uid,lane:m.a.lane}:null;
    if(legal(G,1,a)){G.pending[1]=a;tick()}else pushViews();
-  }else if(m.k==='rematch'&&G&&mode==='host'){rematch[1]=true;oppWantsRematch=true;$('endNote').textContent=`${G.names[1]} عاوز يلعب تاني!`;checkRematch()}
-  else if(m.k==='emote')showEmote(1,m.e);
+  }else if(m.k==='rematch'&&G&&mode==='host'){rematch[1]=true;oppWantsRematch=true;$('endNote').textContent=`${G.names[1]} عاوز يلعب تاني`;checkRematch()}
+  else if(m.k==='emote')showEmote(1,m.i);
  }else if(Net.role==='guest'){
   if(m.k==='view'&&m.v){mode='guest';isDaily=false;['home','lobby','msgBox'].forEach(id=>$(id).classList.add('hidden'));wake();applyView(m.v)}
-  else if(m.k==='rematch'){oppWantsRematch=true;$('endNote').textContent=`${V?V.opp.name:'صاحبك'} عاوز يلعب تاني!`}
-  else if(m.k==='emote')showEmote(1,m.e);
+  else if(m.k==='rematch'){oppWantsRematch=true;$('endNote').textContent=`${V?V.opp.name:'صاحبك'} عاوز يلعب تاني`}
+  else if(m.k==='emote')showEmote(1,m.i);
  }
 }
 function onNetClose(gen){
@@ -987,14 +1021,15 @@ function onNetClose(gen){
  if(mode!=='single'&&V){clearAll();showMsg('صاحبك فصل من اللعبة.')}
  else lobbyState('main','الاتصال اتقفل.');
 }
-function showEmote(side,e){
- if(typeof e!=='string'||!EMOTES.includes(e))return;
- const now=Date.now();if(side===1){if(now-lastEmoteAt<900)return;lastEmoteAt=now}
- const bar=$(side===0?'meBar':'oppBar'),b=document.createElement('div');b.className='bubble';b.textContent=e;bar.append(b);setTimeout(()=>b.remove(),1800);sfx('emote');
+function showEmote(side,i){
+ if(!Number.isInteger(i)||i<0||i>=QUICK.length)return;
+ if(side===1){const now=Date.now();if(now-lastInEmote<900)return;lastInEmote=now}
+ const bar=$(side===0?'meBar':'oppBar');bar.querySelectorAll('.bubble').forEach(b=>b.remove());
+ const b=document.createElement('div');b.className='bubble';b.textContent=QUICK[i];bar.append(b);setTimeout(()=>b.remove(),2100);sfx('emote');
 }
-function sendEmote(e){
- if(!online_()||!EMOTES.includes(e))return;const now=Date.now();if(now-lastEmoteAt<900)return;
- Net.send({k:'emote',e});const t=lastEmoteAt;showEmote(0,e);lastEmoteAt=now;$('tray').classList.add('hidden');void t;
+function sendEmote(i){
+ if(!online_())return;const now=Date.now();if(now-lastEmoteAt<900)return;lastEmoteAt=now;
+ Net.send({k:'emote',i});showEmote(0,i);$('tray').classList.add('hidden');
 }
 function checkRematch(){if(rematch[0]&&rematch[1])beginMatch([...G.names],[...G.avatars])}
 function againClick(){
@@ -1004,31 +1039,30 @@ function againClick(){
 }
 
 /* ---------- ربط الأزرار ---------- */
+QUICK.forEach((q,i)=>{const b=document.createElement('button');b.textContent=q;b.onclick=()=>sendEmote(i);$('tray').append(b)});
 document.querySelectorAll('#diffSeg button').forEach(b=>b.onclick=()=>{store.diff=b.dataset.d;save();refreshHome()});
-$('nameIn').oninput=e=>{store.name=e.target.value.slice(0,14);save()};
+$('nameIn').oninput=e=>{store.name=e.target.value.slice(0,14);save();paintAv($('avBtn'),myAvatar(),myName(false))};
 $('startBtn').onclick=()=>startSingle(false);
 $('dailyBtn').onclick=()=>startSingle(true);
 $('friendsBtn').onclick=openLobby;
 $('hostBtn').onclick=hostRoom;
 $('joinBtn').onclick=()=>joinRoom($('codeIn').value);
 $('lobbyBack').onclick=()=>{netGen++;Net.close();$('lobby').classList.add('hidden');lobbyState('main','')};
-$('copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(roomLink());$('lobbyStatus').textContent='اتنسخ! ابعته لصاحبك 😉'}catch(e){$('lobbyStatus').textContent=roomLink()}};
-$('shareLinkBtn').onclick=async()=>{const text=`تعالى نلعب لَمّة! ${roomLink()}`;try{if(navigator.share)await navigator.share({text});else{await navigator.clipboard.writeText(text);$('lobbyStatus').textContent='اتنسخ!'}}catch(e){}};
+$('copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(roomLink());$('lobbyStatus').textContent='اتنسخ. ابعته لصاحبك'}catch(e){$('lobbyStatus').textContent=roomLink()}};
+$('shareLinkBtn').onclick=async()=>{const text=`تعالى نلعب لَمّة: ${roomLink()}`;try{if(navigator.share)await navigator.share({text});else{await navigator.clipboard.writeText(text);$('lobbyStatus').textContent='اتنسخ'}}catch(e){}};
 $('againBtn').onclick=againClick;
 $('endMenu').onclick=goMenu;
 $('msgOk').onclick=goMenu;
 $('swapBtn').onclick=onSwap;
-$('confirmBtn').onclick=onConfirm;
 $('calcBtn').onclick=()=>{showCalc=!showCalc;render()};
 $('emoteBtn').onclick=()=>$('tray').classList.toggle('hidden');
-document.querySelectorAll('#tray button').forEach(b=>b.onclick=()=>sendEmote(b.dataset.e));
 $('menuTop').onclick=()=>$('gmenu').classList.remove('hidden');
 $('gmResume').onclick=()=>$('gmenu').classList.add('hidden');
 $('gmRules').onclick=()=>$('rules').classList.remove('hidden');
 $('gmCards').onclick=()=>$('cats').classList.remove('hidden');
-$('gmLeave').onclick=()=>{$('gmenu').classList.add('hidden');if(V&&!V.done)ask(online_()?'لو خرجت اللعبة هتتقفل على صاحبك. متأكد؟':'متأكد إنك عاوز تخرج من الجولة؟',goMenu);else goMenu()};
+$('gmLeave').onclick=()=>{$('gmenu').classList.add('hidden');if(V&&!V.done)ask(online_()?'لو خرجت، اللعبة هتتقفل على صاحبك. متأكد؟':'متأكد إنك عاوز تخرج من الجولة؟',goMenu);else goMenu()};
 $('confirmNo').onclick=()=>$('confirm').classList.add('hidden');
-$('soundBtn').onclick=()=>{store.sound=!store.sound;save();refreshHome();sfx('play')};
+$('soundBtn').onclick=()=>{store.sound=!store.sound;save();refreshHome();sfx('sel')};
 $('rulesBtn').onclick=()=>$('rules').classList.remove('hidden');
 $('closeRules').onclick=()=>$('rules').classList.add('hidden');
 $('rulesTour').onclick=()=>{$('rules').classList.add('hidden');showTour()};
@@ -1042,8 +1076,8 @@ $('sheetClose').onclick=()=>$('sheet').classList.add('hidden');
 $('sheet').onclick=e=>{if(e.target===$('sheet'))$('sheet').classList.add('hidden')};
 $('tourNext').onclick=()=>{if(tourI>=TOUR.length-1)endTour();else{tourI++;renderTour()}};
 $('tourSkip').onclick=endTour;
-$('shareBtn').onclick=async()=>{try{if(navigator.share){await navigator.share({text:lastShare})}else{await navigator.clipboard.writeText(lastShare);$('endNote').textContent='اتنسخت! ابعتها لصحابك 😉'}}catch(e){try{await navigator.clipboard.writeText(lastShare);$('endNote').textContent='اتنسخت! ابعتها لصحابك 😉'}catch(x){$('endNote').textContent=lastShare}}};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){['sheet','cats','rules','achs','avpick','gmenu'].forEach(id=>$(id).classList.add('hidden'));$('tray').classList.add('hidden')}});
+$('shareBtn').onclick=async()=>{try{if(navigator.share){await navigator.share({text:lastShare})}else{await navigator.clipboard.writeText(lastShare);$('endNote').textContent='اتنسخت. ابعتها لصحابك'}}catch(e){try{await navigator.clipboard.writeText(lastShare);$('endNote').textContent='اتنسخت. ابعتها لصحابك'}catch(x){$('endNote').textContent=lastShare}}};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){['sheet','cats','rules','achs','avpick','gmenu'].forEach(id=>$(id).classList.add('hidden'));$('tray').classList.add('hidden');if(canAct()&&selUid!=null){selUid=null;stage=null;render()}}});
 
 /* تثبيت التطبيق وتحديثه */
 let deferredPrompt=null;
@@ -1055,11 +1089,11 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){window.add
 
 /* بدء التشغيل */
 buildCatalog();
-beginMatch([myName(false),'المعلم روبوت'],[myAvatar(),BOT_AV],true);
+beginMatch([myName(false),'المعلم روبوت'],[myAvatar(),BOT],true);
 showHome();
 if(!store.seen)showTour();
 try{const room=(new URLSearchParams(location.search).get('room')||'').toUpperCase();if(/^[A-Z2-9]{5}$/.test(room)){openLobby();$('codeIn').value=room;joinRoom(room)}}catch(e){}
 
-window.__lh={get G(){return G},get V(){return V},get mode(){return mode},get store(){return store},calc,totals,types,levelInfo,setSpeed:s=>{SPEED=s},debugCd:(forMe,ms)=>{V.cd={forMe,until:Date.now()+ms};render()},setCount:m=>{COUNT_MS=m}};
+window.__lh={get G(){return G},get V(){return V},get mode(){return mode},get store(){return store},calc,totals,types,levelInfo,QUICK,setSpeed:s=>{SPEED=s},setCount:m=>{COUNT_MS=m},debugCd:(forMe,ms)=>{V.cd={forMe,until:Date.now()+ms};render()}};
 })();
 </script></body></html>
