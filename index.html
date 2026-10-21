@@ -67,7 +67,9 @@ svg{display:block}
 .lane.full{opacity:.75}
 .lh{display:flex;align-items:baseline;justify-content:space-between;gap:2px;line-height:1.1;padding:0 3px}
 .ln{font-size:14px;font-weight:800;white-space:nowrap}
-.lp{font-size:11px;font-weight:700;color:var(--gold)}
+.lp{font-size:11px;font-weight:700;color:var(--gold);white-space:nowrap}
+.lp small{font-size:inherit}
+@media(max-width:380px){.lp small{display:none}.lp{font-size:12px}}
 .evb{position:absolute;top:-8px;inset-inline-start:8px;font-size:10px;font-weight:700;color:var(--gold);background:var(--bg);border:1px solid #e8bd5c55;border-radius:999px;padding:0 8px;white-space:nowrap;z-index:1}
 .stack{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:3px;min-height:0}
 .tile{position:relative;display:flex;align-items:center;gap:4px;padding:0 6px;width:100%;height:100%;max-height:42px;min-height:24px;align-self:center;border-radius:8px;background:var(--paper);color:var(--ink);font-weight:800;border-inline-start:3px solid var(--teal);cursor:pointer}
@@ -104,26 +106,42 @@ svg{display:block}
 .vig{position:fixed;inset:0;pointer-events:none;z-index:6}
 .vig.on{animation:vig .9s infinite alternate}
 .logln{min-height:20px;padding:0 12px;font-size:11.5px;color:var(--muted);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* الكروت: الرقم في النص ولون العيلة */
-.card{position:relative;--cw:var(--hw);--fam:#8a6420;width:var(--cw);height:calc(var(--cw)*1.38);flex:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(var(--cw)*.1) 4px 6px;border-radius:12px;background:var(--paper);color:var(--ink);box-shadow:0 2px 8px #0006;overflow:hidden;transition:transform .15s,box-shadow .15s}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--fam)}
-.card .fl{display:none;font-size:10px;font-weight:800;color:var(--fam);letter-spacing:0}
-.card .num{font-size:calc(var(--cw)*.46);font-weight:900;line-height:1;color:var(--fam);margin-top:calc(var(--cw)*.06)}
+/* الكروت: أيقونة الشخصية في ميدالية بلون نوعه + القوة في الركن */
+.card{position:relative;--cw:var(--hw);--fam:#8a6420;--famt:#8a64201f;width:var(--cw);height:calc(var(--cw)*1.38);flex:none;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 4px 6px;border-radius:12px;background:var(--paper);color:var(--ink);box-shadow:0 2px 8px #0006;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--fam)}
+.card .bp{position:absolute;top:calc(var(--cw)*.08);right:calc(var(--cw)*.07);width:calc(var(--cw)*.3);height:calc(var(--cw)*.3);border-radius:50%;background:var(--fam);color:#fff;display:grid;place-items:center;font-weight:900;font-size:calc(var(--cw)*.17);line-height:1;box-shadow:0 0 0 2px var(--paper);z-index:1}
+.card .fl{display:none;position:absolute;top:calc(var(--cw)*.1);left:calc(var(--cw)*.08);font-size:10px;font-weight:800;color:var(--fam)}
+.card .med{flex:none;width:calc(var(--cw)*.6);height:calc(var(--cw)*.6);margin-top:calc(var(--cw)*.26);border-radius:50%;background:var(--famt);color:var(--fam);display:grid;place-items:center}
+.card .med svg{width:56%;height:56%;stroke-width:1.7}
 .card .nm{width:100%;font-size:max(10.5px,calc(var(--cw)*.145));font-weight:800;line-height:1.2;margin-top:auto;overflow-wrap:anywhere}
 .card .ab{display:none;width:100%;font-size:9.5px;line-height:1.35;color:#5d5546;margin-top:4px}
 .card.hand{cursor:pointer}
+.card.hand .ab{display:none;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card.hand .nm{margin-bottom:2px}
 .card.hand.sel{transform:translateY(-12px);box-shadow:0 0 0 2px var(--gold),0 8px 16px #0007}
 .card.hand.sent{opacity:.5}
-.card .tag{position:absolute;left:0;right:0;bottom:0;padding:3px 2px;font-size:max(9.5px,calc(var(--cw)*.12));font-weight:900;line-height:1.2;background:var(--gold);color:#2a1d05}
+.card .tag{position:absolute;left:0;right:0;bottom:0;padding:3px 2px;font-size:max(9.5px,calc(var(--cw)*.12));font-weight:900;line-height:1.2;background:var(--gold);color:#2a1d05;z-index:2}
 .card.hand.sent .tag{background:#cfc4ab;color:var(--ink)}
 .card.big{--cw:150px}
 .card.mid{--cw:104px}
 .card.big .fl,.card.mid .fl{display:block}
 .card.big .ab,.card.mid .ab{display:block}
 .card.big .ab{font-size:12px}
-.card.big .num{margin-top:6px}.card.mid .num{margin-top:4px}
-.card.big .nm,.card.mid .nm{margin-top:6px}
+.card.mid{height:calc(var(--cw)*1.6)}
+.card.mid .med{width:calc(var(--cw)*.5);height:calc(var(--cw)*.5);margin-top:calc(var(--cw)*.3)}
+.card.mid .bp{width:26px;height:26px;font-size:14px}
+.card.big{height:calc(var(--cw)*1.5)}
+.card.big .med{margin-top:calc(var(--cw)*.28)}
+.card.hand.ready .nm{visibility:hidden}
+.card.big .nm,.card.mid .nm{margin-top:8px}
+.ic{display:inline-block;flex:none}
+.tile .ti{width:17px;height:17px;color:var(--fam);stroke-width:2}
+.ln .ic{width:15px;height:15px;color:var(--gold);vertical-align:-2px;margin-inline-end:4px}
+.evb .ic,.evc .ic{width:11px;height:11px;vertical-align:-1px;margin-inline-end:3px}
+.evc .ic{color:var(--gold)}
+.lres .ic{width:16px;height:16px;display:block;margin:0 auto 2px}
+.av .avbot{width:58%;height:58%}
+.ib .ic{width:20px;height:20px;color:var(--text)}
 /* الدوك */
 .dock{position:relative;background:#0c1d1b;border-top:1px solid var(--line);padding:6px 10px calc(10px + env(safe-area-inset-bottom))}
 .dockrow{display:flex;align-items:center;gap:8px;min-height:40px}
@@ -235,7 +253,7 @@ svg{display:block}
 @keyframes toastin{from{transform:translateX(-50%) translateY(-6px);opacity:0}to{transform:translateX(-50%);opacity:1}}
 @media(max-width:430px){.card.hand .nm{font-size:max(10px,calc(var(--cw)*.14))}}
 @media(max-height:680px){.dockrow{min-height:34px}.hand{padding-top:12px}.pbar{padding:4px 10px}.pbar .av{width:30px;height:30px;font-size:14px}.pbar .sc{font-size:21px}}
-@media(min-width:820px){:root{--hwb:100px}.card.hand .ab{display:block}.tile{max-height:52px}.tn{font-size:13px}.slot{max-height:52px}.lane{max-height:520px}.ln{font-size:16px}.pw{font-size:18px}.infoln{font-size:14px}}
+@media(min-width:820px){:root{--hwb:104px}.card.hand .ab{display:-webkit-box}.card.hand .med{width:calc(var(--cw)*.5);height:calc(var(--cw)*.5);margin-top:calc(var(--cw)*.2)}.card.hand .nm{margin-top:6px}.tile .ti{width:19px;height:19px}.tile{max-height:52px}.tn{font-size:13px}.slot{max-height:52px}.lane{max-height:520px}.ln{font-size:16px}.pw{font-size:18px}.infoln{font-size:14px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head>
 <body>
@@ -243,7 +261,7 @@ svg{display:block}
 
 <div id="game">
  <header class="hdr">
-  <button class="ib" id="menuTop" aria-label="القايمة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <button class="ib" id="menuTop" aria-label="القايمة"></button>
   <div class="rounds"><div class="pips" id="pips"></div><div class="rtxt" id="rtxt"></div></div>
   <button class="ib" id="calcBtn" aria-pressed="false">الحساب</button>
  </header>
@@ -407,6 +425,10 @@ svg{display:block}
 const $=id=>document.getElementById(id);
 const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
 let COUNT_MS=15000,SPEED=1;
+/* أيقونات Lucide (ISC) مضمّنة عشان تظهر بنفس الشكل على كل الأجهزة ومن غير إنترنت */
+const ICONS={"hand-platter":"<path d=\"M12 3V2\"/><path d=\"m15.4 17.4 3.2-2.8a2 2 0 1 1 2.8 2.9l-3.6 3.3c-.7.8-1.7 1.2-2.8 1.2h-4c-1.1 0-2.1-.4-2.8-1.2l-1.302-1.464A1 1 0 0 0 6.151 19H5\"/><path d=\"M2 14h12a2 2 0 0 1 0 4h-2\"/><path d=\"M4 10h16\"/><path d=\"M5 10a7 7 0 0 1 14 0\"/><path d=\"M5 14v6a1 1 0 0 1-1 1H2\"/>","shopping-basket":"<path d=\"m15 11-1 9\"/><path d=\"m19 11-4-7\"/><path d=\"M2 11h20\"/><path d=\"m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4\"/><path d=\"M4.5 15.5h15\"/><path d=\"m5 11 4-7\"/><path d=\"m9 11 1 9\"/>","car-taxi-front":"<path d=\"M10 2h4\"/><path d=\"m21 8-2 2-1.5-3.7A2 2 0 0 0 15.646 5H8.4a2 2 0 0 0-1.903 1.257L5 10 3 8\"/><path d=\"M7 14h.01\"/><path d=\"M17 14h.01\"/><rect width=\"18\" height=\"8\" x=\"3\" y=\"10\" rx=\"2\"/><path d=\"M5 18v2\"/><path d=\"M19 18v2\"/>","biceps-flexed":"<path d=\"M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1\"/><path d=\"M15 14a5 5 0 0 0-7.584 2\"/><path d=\"M9.964 6.825C8.019 7.977 9.5 13 8 15\"/>","star":"<path d=\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z\"/>","eye":"<path d=\"M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>","crown":"<path d=\"M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z\"/><path d=\"M5 21h14\"/>","flame":"<path d=\"M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4\"/>","drafting-compass":"<path d=\"m12.99 6.74 1.93 3.44\"/><path d=\"M19.136 12a10 10 0 0 1-14.271 0\"/><path d=\"m21 21-2.16-3.84\"/><path d=\"m3 21 8.02-14.26\"/><circle cx=\"12\" cy=\"5\" r=\"2\"/>","cat":"<path d=\"M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z\"/><path d=\"M8 14v.5\"/><path d=\"M16 14v.5\"/><path d=\"M11.25 16.25h1.5L12 17l-.75-.75Z\"/>","croissant":"<path d=\"M10.2 18H4.774a1.5 1.5 0 0 1-1.352-.97 11 11 0 0 1 .132-6.487\"/><path d=\"M18 10.2V4.774a1.5 1.5 0 0 0-.97-1.352 11 11 0 0 0-6.486.132\"/><path d=\"M18 5a4 3 0 0 1 4 3 2 2 0 0 1-2 2 10 10 0 0 0-5.139 1.42\"/><path d=\"M5 18a3 4 0 0 0 3 4 2 2 0 0 0 2-2 10 10 0 0 1 1.42-5.14\"/><path d=\"M8.709 2.554a10 10 0 0 0-6.155 6.155 1.5 1.5 0 0 0 .676 1.626l9.807 5.42a2 2 0 0 0 2.718-2.718l-5.42-9.807a1.5 1.5 0 0 0-1.626-.676\"/>","key":"<path d=\"m2 21 9.6-9.6\"/><path d=\"m7.5 15.5 2.3 2.3a1 1 0 0 1 0 1.4l-2.1 2.1a1 1 0 0 1-1.4 0L4 19\"/><circle cx=\"15.5\" cy=\"7.5\" r=\"5.5\"/>","mic-vocal":"<path d=\"m11 7.601-5.994 8.19a1 1 0 0 0 .1 1.298l.817.818a1 1 0 0 0 1.314.087L15.09 12\"/><path d=\"M16.5 21.174C15.5 20.5 14.372 20 13 20c-2.058 0-3.928 2.356-6 2-2.072-.356-2.775-3.369-1.5-4.5\"/><circle cx=\"16\" cy=\"7\" r=\"5\"/>","hand-coins":"<path d=\"M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17\"/><path d=\"m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9\"/><path d=\"m2 16 6 6\"/><circle cx=\"16\" cy=\"9\" r=\"2.9\"/><circle cx=\"6\" cy=\"5\" r=\"3\"/>","moon-star":"<path d=\"M18 5h4\"/><path d=\"M20 3v4\"/><path d=\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\"/>","users":"<path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><path d=\"M16 3.128a4 4 0 0 1 0 7.744\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/>","dice-5":"<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" ry=\"2\"/><path d=\"M16 8h.01\"/><path d=\"M8 8h.01\"/><path d=\"M8 16h.01\"/><path d=\"M16 16h.01\"/><path d=\"M12 12h.01\"/>","stethoscope":"<path d=\"M11 2v2\"/><path d=\"M5 2v2\"/><path d=\"M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1\"/><path d=\"M8 15a6 6 0 0 0 12 0v-3\"/><circle cx=\"20\" cy=\"10\" r=\"2\"/>","bird":"<path d=\"M16 7h.01\"/><path d=\"M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20\"/><path d=\"m20 7 2 .5-2 .5\"/><path d=\"M10 18v3\"/><path d=\"M14 17.75V21\"/><path d=\"M7 18a6 6 0 0 0 3.84-10.61\"/>","flashlight":"<path d=\"M12 13v1\"/><path d=\"M17 2a1 1 0 0 1 1 1v4a3 3 0 0 1-.6 1.8l-.6.8A4 4 0 0 0 16 12v8a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-8a4 4 0 0 0-.8-2.4l-.6-.8A3 3 0 0 1 6 7V3a1 1 0 0 1 1-1z\"/><path d=\"M6 6h12\"/>","coffee":"<path d=\"M10 2v2\"/><path d=\"M14 2v2\"/><path d=\"M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1\"/><path d=\"M6 2v2\"/>","store":"<path d=\"M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5\"/><path d=\"M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244\"/><path d=\"M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05\"/>","bus-front":"<path d=\"M4 6 2 7\"/><path d=\"M10 6h4\"/><path d=\"m22 7-2-1\"/><rect width=\"16\" height=\"16\" x=\"4\" y=\"3\" rx=\"2\"/><path d=\"M4 11h16\"/><path d=\"M8 15h.01\"/><path d=\"M16 15h.01\"/><path d=\"M6 19v2\"/><path d=\"M18 21v-2\"/>","party-popper":"<path d=\"M5.8 11.3 2 22l10.7-3.79\"/><path d=\"M4 3h.01\"/><path d=\"M22 8h.01\"/><path d=\"M15 2h.01\"/><path d=\"M22 20h.01\"/><path d=\"m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10\"/><path d=\"m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17\"/><path d=\"m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7\"/><path d=\"M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z\"/>","lightbulb-off":"<path d=\"M16.8 11.2c.8-.9 1.2-2 1.2-3.2a6 6 0 0 0-9.3-5\"/><path d=\"m2 2 20 20\"/><path d=\"M6.3 6.3a4.67 4.67 0 0 0 1.2 5.2c.7.7 1.3 1.5 1.5 2.5\"/><path d=\"M9 18h6\"/><path d=\"M10 22h4\"/>","coins":"<path d=\"M13.744 17.736a6 6 0 1 1-7.48-7.48\"/><path d=\"M15 6h1v4\"/><path d=\"m6.134 14.768.866-.5 2 3.464\"/><circle cx=\"16\" cy=\"8\" r=\"6\"/>","bot":"<path d=\"M12 8V4H8\"/><rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\"/><path d=\"M2 14h2\"/><path d=\"M20 14h2\"/><path d=\"M15 13v2\"/><path d=\"M9 13v2\"/>","menu":"<path d=\"M4 5h16\"/><path d=\"M4 12h16\"/><path d=\"M4 19h16\"/>"};
+const ic=(n,cls)=>`<svg class="ic${cls?' '+cls:''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]||''}</svg>`;
+const CARD_ICON={qahwagi:'hand-platter',seller:'shopping-basket',driver:'car-taxi-front',local:'biceps-flexed',star:'star',mother:'eye',boss:'crown',fool:'flame',student:'drafting-compass',cat:'cat',feteer:'croissant',guard:'key',singer:'mic-vocal',thief:'hand-coins',sheikh:'moon-star',twin:'users',gambler:'dice-5',doctor:'stethoscope',parrot:'bird',ghafir:'flashlight'};
 const FAM={place:{n:'مكان',c:'#2f7a70'},sanad:{n:'سند',c:'#5a7a2e'},clash:{n:'مواجهة',c:'#a04a3a'},power:{n:'قوة',c:'#8a6420'},luck:{n:'مفاجأة',c:'#5c4a8a'}};
 const types=[
 {id:'qahwagi',name:'عم سيد القهوجي',short:'عم سيد',fam:'place',power:3,ability:'في القهوة +2',weight:3},
@@ -429,17 +451,18 @@ const types=[
 {id:'doctor',name:'الدكتور',short:'الدكتور',fam:'sanad',power:3,ability:'+1 لكل كارت ضعيف (2 أو أقل) معاه',weight:2},
 {id:'parrot',name:'الببغاء',short:'الببغاء',fam:'sanad',power:1,ability:'ياخد قوة أقوى كارت معاه',weight:2},
 {id:'ghafir',name:'غفير الليل',short:'الغفير',fam:'luck',power:2,ability:'+3 لو نزل بعد الدور 5',weight:2}];
+types.forEach(t=>{t.icon=CARD_ICON[t.id]});
 const TYPE=Object.create(null);types.forEach(t=>{TYPE[t.id]=t});
-const LANES=[{id:'cafe',name:'القهوة',points:5},{id:'market',name:'السوق',points:4},{id:'station',name:'الموقف',points:3}];
+const LANES=[{id:'cafe',name:'القهوة',points:5,icon:'coffee'},{id:'market',name:'السوق',points:4,icon:'store'},{id:'station',name:'الموقف',points:3,icon:'bus-front'}];
 const LANE_IDS=LANES.map(l=>l.id);
-const eventTypes={wedding:{name:'فرح شعبي',desc:'+1 لكل كارت'},blackout:{name:'النور قطع',desc:'−1 لكل كارت'},season:{name:'موسم الرزق',desc:'نقط المكان +2'}};
+const eventTypes={wedding:{name:'فرح شعبي',desc:'+1 لكل كارت',icon:'party-popper'},blackout:{name:'النور قطع',desc:'−1 لكل كارت',icon:'lightbulb-off'},season:{name:'موسم الرزق',desc:'نقط المكان +2',icon:'coins'}};
 const bidi=s=>s.replace(/([+−]\d+)/g,'⁦$1⁩');
 types.forEach(t=>{t.ability=bidi(t.ability)});Object.values(eventTypes).forEach(e=>{e.desc=bidi(e.desc)});
 const DIFF={easy:{name:'هيّن',swing:.4,diff:.3,lane:.2,noise:4},normal:{name:'عادي',swing:.9,diff:.55,lane:.35,noise:2},hard:{name:'شرس',swing:1.1,diff:.35,lane:.3,noise:.6}};
 const COLORS=[{id:'c1',n:'زيتي',c:'#2f7a70',lv:1},{id:'c2',n:'برونزي',c:'#8a6420',lv:1},{id:'c3',n:'زيتوني',c:'#5a7a2e',lv:2},{id:'c4',n:'طوبي',c:'#a04a3a',lv:3},{id:'c5',n:'بنفسجي',c:'#5c4a8a',lv:4},{id:'c6',n:'أزرق',c:'#2d5f8a',lv:5},{id:'c7',n:'عنابي',c:'#8a3a62',lv:6},{id:'c8',n:'ذهبي',c:'#b88a1e',lv:8}];
 const QUICK=['عاش!','حلوة دي','هههه','بالراحة عليا','حظ سعيد','جولة كمان؟'];
 const BOT='bot';
-const BOT_SVG='<svg viewBox="0 0 24 24" width="62%" height="62%" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4.5V8"/><circle cx="12" cy="3.6" r="1"/><circle cx="9.5" cy="13" r="1.1" fill="currentColor"/><circle cx="14.5" cy="13" r="1.1" fill="currentColor"/><path d="M9.5 16.3h5"/></svg>';
+const BOT_SVG=ic('bot','avbot');
 const ACH=[
 {id:'first_win',n:'أول كسبة',d:'اكسب أي جولة'},
 {id:'sweep',n:'كسّحت',d:'اكسب الأماكن التلاتة في جولة'},
@@ -725,15 +748,16 @@ function confirmStage(){
 /* ---------- العرض ---------- */
 function toast(text,ms=1800){const t=$('toast');t.textContent=text;t.classList.remove('hidden','show');void t.offsetWidth;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.add('hidden'),ms)}
 function cardEl(c,cls){
- const el=document.createElement('div');el.className='card '+(cls||'');el.style.setProperty('--fam',FAM[c.fam].c);
+ const el=document.createElement('div');el.className='card '+(cls||'');el.style.setProperty('--fam',FAM[c.fam].c);el.style.setProperty('--famt',FAM[c.fam].c+'1f');
  const num=c.id==='gambler'&&c.roll==null?'؟':fmt(basePower(c));
- el.innerHTML=`<span class="fl">${FAM[c.fam].n}</span><span class="num">${num}</span><span class="nm">${c.name}</span><span class="ab">${c.ability}</span>`;
+ el.innerHTML=`<span class="bp">${num}</span><span class="fl">${FAM[c.fam].n}</span><span class="med">${ic(c.icon)}</span><span class="nm">${c.name}</span><span class="ab">${c.ability}</span>`;
  return el;
 }
 function tileEl(c,val,o){
  o=o||{};const el=document.createElement('div');el.className='tile'+(o.fresh?' fresh':'')+(o.ghost?' ghost':'');
  const base=basePower(c),cls=val>base?'up':val<base?'down':'';
- el.innerHTML=`<span class="tn">${c.short}</span><span class="tp ${cls}">${fmt(val)}</span>`;
+ el.style.setProperty('--fam',FAM[c.fam].c);
+ el.innerHTML=`${ic(c.icon,'ti')}<span class="tn">${c.short}</span><span class="tp ${cls}">${fmt(val)}</span>`;
  el.setAttribute('aria-label',`${c.name} قوة ${fmt(val)}`);
  if(!o.ghost){
   let lp=null,fired=false;const clr=()=>{clearTimeout(lp);lp=null};
@@ -767,7 +791,7 @@ function render(){
  [...pips.children].forEach((p,i)=>{p.className='pip'+(i<V.turn-1||V.done?' done':i===V.turn-1?' now':'')});
  $('rtxt').textContent=V.done?'خلصت':`الدور ${V.turn} من 8`;
  $('calcBtn').classList.toggle('on',showCalc);$('calcBtn').setAttribute('aria-pressed',String(showCalc));
- $('events').innerHTML=V.events.length?V.events.map(e=>{const ev=eventTypes[e.type];return`<span class="evc"><b>${ev.name}</b> في ${laneDef(e.lane).name}: ${ev.desc}</span>`}).join(''):'<span class="evc">أول حدث في الحارة هييجي في الدور 3</span>';
+ $('events').innerHTML=V.events.length?V.events.map(e=>{const ev=eventTypes[e.type];return`<span class="evc">${ic(ev.icon)}<b>${ev.name}</b> في ${laneDef(e.lane).name}: ${ev.desc}</span>`}).join(''):'<span class="evc">أول حدث في الحارة هييجي في الدور 3</span>';
  $('emoteBtn').classList.toggle('hidden',!online);if(!online)$('tray').classList.add('hidden');
  const sel=selUid!=null?me.hand.find(c=>c.uid===selUid):null;
  const sentCard=pend?me.hand.find(c=>c.uid===pend.uid):null;
@@ -782,7 +806,7 @@ function render(){
   el.className='lane'+(act_&&sel&&room&&!stage?' elig':'')+(gLane===l.id?' staged':'')+(!room?' full':'');
   el.tabIndex=0;el.setAttribute('role','button');
   el.setAttribute('aria-label',`${l.name}، ${pts} نقط. قوتك ${fmt(A.score)} مقابل ${fmt(B.score)}`);
-  el.innerHTML=`<div class="lh"><span class="ln">${l.name}</span><span class="lp">${pts} نقط</span></div>`+(ev?`<div class="evb">${eventTypes[ev.type].name}</div>`:'');
+  el.innerHTML=`<div class="lh"><span class="ln">${ic(l.icon)}${l.name}</span><span class="lp">${pts}<small> نقط</small></span></div>`+(ev?`<div class="evb">${ic(eventTypes[ev.type].icon)}${eventTypes[ev.type].name}</div>`:'');
   const os=document.createElement('div');os.className='stack o';
   opp.board[l.id].forEach((c,i)=>os.append(tileEl(c,B.vals[i],{fresh:V.anim.includes(c.uid)})));
   for(let i=opp.board[l.id].length;i<3;i++){const s=document.createElement('div');s.className='slot';os.append(s)}
@@ -812,7 +836,7 @@ function render(){
  me.hand.forEach(c=>{
   const e=cardEl(c,'hand'),isSel=selUid===c.uid;
   if(isSel)e.classList.add('sel');
-  if(isSel&&stage){const t=document.createElement('span');t.className='tag';t.textContent=stage.swap?'دوس للتبديل':'دوس للتأكيد';e.append(t)}
+  if(isSel&&stage){e.classList.add('ready');const t=document.createElement('span');t.className='tag';t.textContent=stage.swap?'دوس للتبديل':'دوس للتأكيد';e.append(t)}
   if(pend&&pend.uid===c.uid){e.classList.add('sent');const t=document.createElement('span');t.className='tag';t.textContent='اتبعت';e.append(t)}
   e.tabIndex=0;e.setAttribute('role','button');e.setAttribute('aria-pressed',String(isSel));
   e.setAttribute('aria-label',`${c.name}، القوة ${c.id==='gambler'?'بالنرد':c.power}، ${c.ability}${isSel&&stage?'. دوس تاني للتأكيد':''}`);
@@ -896,7 +920,7 @@ function finishMatch(id){
  w.textContent=win?'كسبت':lose?'خسرت':'تعادل';w.className='result '+(win?'w':lose?'l':'d');
  $('endSub').textContent=online?(win?'كسبت صاحبك، عاش!':lose?`${on} كسب المرادي`:'قعدة صلح ونلعب تاني؟'):(win?'الحارة حارتك يا معلم!':lose?'شد حيلك وخد تارك الجولة الجاية':'قعدة صلح ونلعب تاني؟');
  $('esMe').textContent=fmt(ps);$('esOp').textContent=fmt(bs);$('esMeN').textContent=V.me.name;$('esOpN').textContent=on;
- $('endLanes').innerHTML=detail.map(x=>`<div class="${x.p>x.q?'w':x.p<x.q?'l':''}"><b>${x.l.name}</b>${fmt(x.a)} : ${fmt(x.b)}<br>${x.p>x.q?'ليك':x.p<x.q?'للخصم':'تعادل'}</div>`).join('');
+ $('endLanes').innerHTML=detail.map(x=>`<div class="${x.p>x.q?'w':x.p<x.q?'l':''}">${ic(x.l.icon)}<b>${x.l.name}</b>${fmt(x.a)} : ${fmt(x.b)}<br>${x.p>x.q?'ليك':x.p<x.q?'للخصم':'تعادل'}</div>`).join('');
  $('xpBox').classList.toggle('hidden',!counted);
  if(counted){
   $('xpGain').textContent=`+${gain} خبرة`;$('xpLvl').textContent=lvUp?`وصلت مستوى ${after.lvl}`:`مستوى ${after.lvl}`;
@@ -1088,6 +1112,7 @@ $('updBtn').onclick=()=>location.reload();
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').then(reg=>{reg.addEventListener('updatefound',()=>{const nw=reg.installing;nw&&nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&navigator.serviceWorker.controller)$('upd').classList.remove('hidden')})})}).catch(()=>{}))}
 
 /* بدء التشغيل */
+$('menuTop').innerHTML=ic('menu');
 buildCatalog();
 beginMatch([myName(false),'المعلم روبوت'],[myAvatar(),BOT],true);
 showHome();

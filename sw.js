@@ -1,5 +1,5 @@
 /* Service worker: بيخلي اللعبة تشتغل أوفلاين (ضد الروبوت) وتتثبّت كتطبيق */
-const CACHE = 'lamma-v5';
+const CACHE = 'lamma-v6';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 const EXTERNAL = ['fonts.googleapis.com', 'fonts.gstatic.com', 'unpkg.com', 'cdn.jsdelivr.net'];
 
